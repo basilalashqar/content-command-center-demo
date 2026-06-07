@@ -129,12 +129,13 @@
         <div class="run-demo-bar">
           <div>
             <div class="run-demo-title">Run the demo</div>
-            <div class="run-demo-sub">Three controlled scenarios — New Event package, Sensitive News governance, Changed/Cancelled event.</div>
+            <div class="run-demo-sub">Take the 90-second guided tour, or jump straight to a scenario.</div>
           </div>
           <div class="run-demo-actions">
-            <button class="btn-primary" data-jump="generate">▶ New Event package</button>
-            <button class="btn-secondary" data-jump="governance">Sensitive News</button>
-            <button class="btn-secondary" data-jump="freshness">Changed / Cancelled event</button>
+            <button class="btn-primary" id="tour-start">▶ Start guided tour</button>
+            <button class="btn-secondary" data-jump="radar">Live News Radar</button>
+            <button class="btn-secondary" data-jump="generate">New Event package</button>
+            <button class="btn-secondary" data-jump="freshness">Event freshness</button>
           </div>
         </div>
 
@@ -585,6 +586,20 @@
       </section>
 
     </main>
+  </div>
+
+  <!-- Guided tour overlay -->
+  <div id="tour" class="tour-hidden">
+    <div class="tour-backdrop"></div>
+    <div class="tour-card" id="tour-card">
+      <div class="tour-step" id="tour-step"></div>
+      <div class="tour-title" id="tour-title"></div>
+      <div class="tour-text" id="tour-text"></div>
+      <div class="tour-actions">
+        <button class="btn-secondary" id="tour-skip">Skip</button>
+        <button class="btn-primary" id="tour-next">Next →</button>
+      </div>
+    </div>
   </div>
 
   <script src="./static-shim.js"></script>

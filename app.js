@@ -69,10 +69,65 @@ window.addEventListener("DOMContentLoaded", async () => {
   wireParaphraseForm();
   wireRadar();
   loadSampleImages();
+  wireTour();
   await loadOverview();   // first paint
   // Lazy-load others on first nav click; but pre-warm freshness data
   loadFreshness();
 });
+
+/* ───────── Guided tour ───────── */
+const TOUR_STEPS = [
+  { section: "overview", sel: '.pipeline-strip',
+    title: "A content operating workflow",
+    text: "This is the Qatar Living AI Content Command Center — a controlled newsroom workflow for Events, News & Social. AI prepares the work; humans approve every decision. Nothing auto-publishes." },
+  { section: "radar", sel: '.radar-bar',
+    title: "1 · Radar — it scrapes real Qatar news",
+    text: "The pilot continuously pulls live news from QNA, The Peninsula, Gulf Times and more, and classifies each item for governance risk — refreshing on its own every ~12 minutes." },
+  { section: "radar", sel: '#radar-auto',
+    title: "2 · Auto-prepare",
+    text: "One click re-reports the top stories in Qatar Living's tone — applying the 12 Genuine Issues — and drops them into the approval queue. The desk wakes up to drafts already prepared." },
+  { section: "paraphrase", sel: '#section-paraphrase .section-head',
+    title: "3 · Paraphrase any source",
+    text: "Paste a full article from any outlet. It is re-reported as an original Qatar Living piece — reworded, not copied — with nbsp/boilerplate cleaned, honorifics fixed, and a faithfulness check." },
+  { section: "governance", sel: '#section-governance .section-head',
+    title: "4 · Governance gate",
+    text: "Every item is risk-classified. Anything touching royals, ministries, diplomacy, security or religion is routed to senior + legal review and marked No-auto-publish." },
+  { section: "copilot", sel: '#section-copilot .section-head',
+    title: "5 · Human approval + learning",
+    text: "Editors approve, edit, or reject with a reason. Those reasons feed a learning loop that tightens the prompts over time — the system improves with use." },
+  { section: "freshness", sel: '#freshness-summary',
+    title: "6 · Event freshness",
+    text: "57.6% of Qatar Living's listed events had already ended at study time (80.5% today). The freshness agent flags each one with a suggested correction for approval." },
+  { section: "operating", sel: '#op-table',
+    title: "7 · Operating model + audit",
+    text: "Every workflow stage has an owner, a KPI, and a control — with a full audit trail. This is what makes it an operating layer, not a toy." },
+];
+let TOUR_I = 0;
+function wireTour() {
+  $("#tour-start")?.addEventListener("click", () => startTour());
+  $("#tour-next")?.addEventListener("click", () => { TOUR_I++; renderTourStep(); });
+  $("#tour-skip")?.addEventListener("click", endTour);
+}
+function startTour() { TOUR_I = 0; $("#tour").classList.remove("tour-hidden"); renderTourStep(); }
+function endTour() {
+  $("#tour").classList.add("tour-hidden");
+  document.querySelectorAll(".tour-spot").forEach(e => e.classList.remove("tour-spot"));
+}
+function renderTourStep() {
+  document.querySelectorAll(".tour-spot").forEach(e => e.classList.remove("tour-spot"));
+  if (TOUR_I >= TOUR_STEPS.length) { endTour(); return; }
+  const s = TOUR_STEPS[TOUR_I];
+  const navBtn = document.querySelector(`.nav-item[data-section="${s.section}"]`);
+  if (navBtn) navBtn.click();
+  setTimeout(() => {
+    const el = document.querySelector(s.sel);
+    if (el) { el.classList.add("tour-spot"); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
+    $("#tour-step").textContent = `Step ${TOUR_I + 1} of ${TOUR_STEPS.length}`;
+    $("#tour-title").textContent = s.title;
+    $("#tour-text").textContent = s.text;
+    $("#tour-next").textContent = (TOUR_I === TOUR_STEPS.length - 1) ? "Finish ✓" : "Next →";
+  }, 350);
+}
 
 /* Real Qatar Living hero images (from the scraped corpus) */
 let SAMPLE_IMAGES = [];

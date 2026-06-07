@@ -1174,3 +1174,21 @@ tbody tr:hover td { background: #f7fafc; }
 .radar-title { font-size: 15px; font-weight: 600; line-height: 1.35; color: #101828; flex: 1; }
 .radar-meta { font-size: 11px; color: var(--muted); }
 .radar-prep { font-size: 12px; padding: 8px 12px; margin-top: auto; }
+
+/* ════════════════ Guided tour ════════════════ */
+#tour.tour-hidden { display: none; }
+.tour-backdrop { position: fixed; inset: 0; background: transparent; z-index: 200; }
+.tour-card {
+  position: fixed; z-index: 201; right: 36px; bottom: 36px; width: 380px; max-width: calc(100vw - 40px);
+  background: #fff; border: 1px solid var(--rule); border-radius: 12px; padding: 20px 22px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.35); border-top: 4px solid var(--orange);
+}
+.tour-step { font-size: 11px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: .06em; }
+.tour-title { font-family: var(--sans); font-weight: 800; font-size: 18px; color: var(--navy); margin: 4px 0 8px; }
+.tour-text { font-size: 13.5px; line-height: 1.55; color: #344054; }
+.tour-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.tour-spot {
+  position: relative; z-index: 201;
+  outline: 3px solid var(--orange); outline-offset: 4px; border-radius: 6px;
+  box-shadow: 0 0 0 9999px rgba(11,20,38,.45); transition: outline .2s;
+}
