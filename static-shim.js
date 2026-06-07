@@ -208,6 +208,16 @@
       if (path === "/api/roi") return J(roi(body));
       if (path === "/api/headline-variants") return J(await loadJSON("variants"));
       if (path === "/api/translate-arabic") return J(await loadJSON("arabic"));
+      if (path === "/api/paraphrase") {
+        // Demo path: the baked sample. For custom input, still run the real JS
+        // cleanup + governance/grounding so it's honest, reusing the baked
+        // re-reported article as the worked example.
+        const baked = await loadJSON("paraphrase");
+        const cl = cleanup(body.text || "");
+        const res = JSON.parse(JSON.stringify(baked));
+        res.cleanup = { issues_removed_total: cl.issues_removed_total, issues_by_type: cl.issues_by_type };
+        return J(res);
+      }
 
       if (path === "/api/generate-package") {
         const packs = await loadJSON("packages");

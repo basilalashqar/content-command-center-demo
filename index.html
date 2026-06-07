@@ -54,8 +54,11 @@
       <button class="nav-item" data-section="generate">
         <span class="nav-num">02</span><span>Generate</span>
       </button>
+      <button class="nav-item" data-section="paraphrase">
+        <span class="nav-num">03</span><span>Paraphrase News</span>
+      </button>
       <button class="nav-item" data-section="rewrite">
-        <span class="nav-num">03</span><span>Rewrite</span>
+        <span class="nav-num">04</span><span>Rewrite</span>
       </button>
       <button class="nav-item" data-section="checker">
         <span class="nav-num">04</span><span>Style Checker</span>
@@ -237,7 +240,44 @@
         </div>
       </section>
 
-      <!-- ───────────────────── 03 REWRITE ───────────────────── -->
+      <!-- ───────────────────── 03 PARAPHRASE NEWS ───────────────────── -->
+      <section id="section-paraphrase" class="section">
+        <div class="section-head">
+          <h1>Paraphrase News into Qatar Living style</h1>
+          <p class="section-sub">
+            Paste a full news article from any source (wire copy, a press
+            release, another outlet). The system <b>re-reports it as an original
+            Qatar Living article</b> — reworded, not copied — applying all
+            <b>12 Genuine Issues</b> and the house guidelines: cleans
+            <code>&amp;nbsp;</code>/boilerplate, fixes honorifics, removes
+            sensational language, adds a local-impact angle, suggests a category
+            and byline, and surfaces the key facts. Then it checks how faithful
+            the rewrite is to the source.
+          </p>
+        </div>
+
+        <div class="scenario-row">
+          <span class="scenario-label">Try a sample:</span>
+          <button class="scenario-btn" id="pp-sample">Messy wire story (with nbsp + hype + boilerplate)</button>
+        </div>
+
+        <div class="rewrite-grid">
+          <div class="card">
+            <label class="field" style="margin-bottom:12px">
+              <span>Original source name (optional)</span>
+              <input id="pp-source" type="text" placeholder="e.g. Gulf Times / Qatar Airways press office" />
+            </label>
+            <h3>Paste the full news article</h3>
+            <textarea id="pp-input" rows="16" placeholder="Paste the complete article text here…"></textarea>
+            <button id="pp-submit" class="btn-primary" style="margin-top:14px">Paraphrase into Qatar Living style</button>
+          </div>
+          <div class="card" id="pp-output">
+            <div class="empty-state">The Qatar-Living-style rewrite, the Genuine Issues applied, governance, grounding, and an originality check will appear here.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 04 REWRITE ───────────────────── -->
       <section id="section-rewrite" class="section">
         <div class="section-head">
           <h1>Rewrite in Qatar Living voice</h1>

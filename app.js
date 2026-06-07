@@ -15,6 +15,7 @@ const API = {
   classify:        (b) => post("/api/classify", b),
   cleanup:         (b) => post("/api/cleanup", b),
   generatePackage: (b) => post("/api/generate-package", b),
+  paraphrase:      (b) => post("/api/paraphrase", b),
   operatingModel:  () => fetch("/api/operating-model").then(jsonOr(throw_)),
   audit:           () => fetch("/api/workflow/audit").then(jsonOr(throw_)),
   variants:        (b) => post("/api/headline-variants", b),
@@ -63,6 +64,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   wireRoiForm();
   wireCopilotButtons();
   wireRunDemoJumps();
+  wireParaphraseForm();
   await loadOverview();   // first paint
   // Lazy-load others on first nav click; but pre-warm freshness data
   loadFreshness();
@@ -429,6 +431,104 @@ function renderGovernancePanel(gov, pkg) {
     </div>
   `;
 }
+
+/* ───────── Paraphrase News ───────── */
+const PP_SAMPLE = `Qatar Airways has SHOCKINGLY announced a HUGE expansion!!! The airline will resume flights to Helsinki and Tokyo Haneda from 15 July. His Highness the Amir praised the move. According to the airline, four weekly flights to Helsinki will increase to daily from 1 August. Tokyo Haneda gets four weekly flights from 15 July. This is an amazing, game-changing development that brings the network to over 160 destinations.
+Make sure to check out our social media to keep track of the latest content!
+Qatar Living Facebook: facebook.com/qatarliving — Qatar Living Twitter: twitter.com/qatarliving`;
+
+function wireParaphraseForm() {
+  const sample = $("#pp-sample");
+  if (sample) sample.addEventListener("click", () => { $("#pp-input").value = PP_SAMPLE; });
+  const btn = $("#pp-submit");
+  if (!btn) return;
+  btn.addEventListener("click", async () => {
+    const out = $("#pp-output");
+    const text = $("#pp-input").value.trim();
+    if (text.length < 40) { out.innerHTML = `<div class="error-box">Paste a full article (at least a few sentences).</div>`; return; }
+    btn.disabled = true;
+    out.innerHTML = `<div class="empty-state"><span class="spinner"></span> Re-reporting in Qatar Living style…</div>`;
+    try {
+      const r = await API.paraphrase({ text, source_name: $("#pp-source").value.trim() });
+      renderParaphrase(r, out);
+    } catch (e) {
+      out.innerHTML = `<div class="error-box">${escapeHtml(e.message)}</div>`;
+    } finally { btn.disabled = false; }
+  });
+}
+
+function renderParaphrase(r, target) {
+  const p = r.paraphrase || {};
+  const today = new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  const bodyHtml = (p.body||"").split(/\n\s*\n/).map(x=>`<p>${escapeHtml(x)}</p>`).join("");
+  const giList = (p.gi_applied||[]).map(g=>`<div class="gi-row"><span class="gi-tag">${escapeHtml(g.gi||"")}</span> ${escapeHtml(g.what||"")}</div>`).join("");
+  const removed = (p.removed||[]).map(x=>`<span class="chip">${escapeHtml(x)}</span>`).join("");
+  const keyFacts = (p.key_facts||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join("");
+  const okBadge = p.paraphrase_ok
+    ? `<span class="badge badge-trust">Original rewrite · ${p.overlap_pct}% source overlap</span>`
+    : `<span class="badge badge-stop">High overlap ${p.overlap_pct}% — reword further</span>`;
+  target.innerHTML = `
+    <div class="preview-label">Re-reported for Qatar Living ${okBadge}
+      <button class="copy-btn" data-copy="pp-article">⧉ Copy article</button>
+    </div>
+    <div class="ql-article" id="pp-article-src">
+      <div class="ql-breadcrumb">Home <span>›</span> News <span>›</span> ${escapeHtml(p.suggested_category||"Qatar")}</div>
+      <h1 class="ql-article-h1">${escapeHtml(p.headline||"")}</h1>
+      <div class="ql-byline"><span class="ql-avatar">QL</span><span><b>${escapeHtml(p.suggested_byline||"Qatar Living")}</b> · ${escapeHtml(today)}</span></div>
+      <div class="ql-article-body">${bodyHtml}</div>
+      ${keyFacts ? `<div class="keyfacts"><b>Key facts</b><ul>${keyFacts}</ul></div>` : ""}
+    </div>
+
+    <div class="gi-panel">
+      <div class="gov-head">Genuine Issues applied <span class="badge badge-trust">${(p.gi_applied||[]).length} fixes</span></div>
+      ${giList || '<div class="muted">—</div>'}
+      ${removed ? `<div class="muted" style="margin-top:10px"><b style="color:var(--bone)">Removed from the source:</b><div class="chips chips-warn" style="margin-top:6px">${removed}</div></div>` : ""}
+      <div class="muted" style="margin-top:8px">
+        Category (GI-4): <b>${escapeHtml(p.suggested_category||"—")}</b> ·
+        Byline (GI-8): <b>${escapeHtml(p.suggested_byline||"—")}</b> ·
+        CMS residue removed: <b>${r.cleanup?.issues_removed_total ?? 0}</b>
+      </div>
+      ${p.paraphrase_note ? `<div class="muted" style="margin-top:6px"><i>${escapeHtml(p.paraphrase_note)}</i></div>` : ""}
+    </div>
+
+    ${renderGovernancePanel(r.governance, p)}
+    ${renderScoreHero(r.style_score)}
+    ${renderQuality(r.quality)}
+
+    <div class="row" style="margin-top:16px;gap:10px;flex-wrap:wrap">
+      <button class="btn-primary" id="pp-queue-btn">Send to approval queue</button>
+      <button class="btn-secondary copy-btn" data-copy="pp-article">⧉ Copy article text</button>
+    </div>
+    <div id="pp-queue-out" style="margin-top:10px"></div>
+  `;
+  PP_LAST = { headline: p.headline, body: p.body, risk: r.governance?.risk,
+              risk_labels: r.governance?.risk_labels, style_score: r.style_score?.score,
+              grounding_score: r.quality?.factual_grounding?.grounding_score,
+              source_confidence: r.governance?.source_confidence, source: $("#pp-source").value.trim() };
+}
+let PP_LAST = null;
+
+/* delegated handlers for paraphrase queue + copy buttons */
+document.addEventListener("click", async (e) => {
+  if (e.target.id === "pp-queue-btn" && PP_LAST) {
+    const out = $("#pp-queue-out"); e.target.disabled = true;
+    try {
+      const it = await API.queueAdd({ headline: PP_LAST.headline, body: PP_LAST.body,
+        risk: PP_LAST.risk||"Low", risk_labels: PP_LAST.risk_labels||[],
+        style_score: PP_LAST.style_score??null, grounding_score: PP_LAST.grounding_score??null,
+        source_confidence: PP_LAST.source_confidence??null, source: PP_LAST.source||"paraphrased news" });
+      out.innerHTML = `<div class="callout">Sent to approval queue as item #${it.id}.</div>`;
+    } catch (err) { out.innerHTML = `<div class="error-box">${escapeHtml(err.message)}</div>`; }
+    finally { e.target.disabled = false; }
+  }
+  if (e.target.classList && e.target.classList.contains("copy-btn")) {
+    const id = e.target.dataset.copy;
+    const el = document.getElementById(id + "-src");
+    const txt = el ? el.innerText : "";
+    try { await navigator.clipboard.writeText(txt); const o = e.target.textContent; e.target.textContent = "✓ Copied"; setTimeout(()=>e.target.textContent=o, 1500); }
+    catch { /* clipboard blocked */ }
+  }
+});
 
 /* ───────── Operating Model + Audit ───────── */
 let OP_LOADED = false;
