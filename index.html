@@ -168,11 +168,13 @@
 
         <div class="radar-bar">
           <div class="radar-status" id="radar-status">Loading live feed…</div>
-          <div class="row" style="gap:8px">
+          <div class="row" style="gap:8px;flex-wrap:wrap">
             <span class="radar-risk" id="radar-riskmix"></span>
+            <button class="btn-primary" id="radar-auto">⚡ Auto-prepare top 3 → queue</button>
             <button class="btn-secondary" id="radar-refresh">↻ Refresh now</button>
           </div>
         </div>
+        <div id="radar-auto-out"></div>
 
         <div class="radar-grid" id="radar-grid">
           <div class="empty-state">Scraping live Qatar news…</div>

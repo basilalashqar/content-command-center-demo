@@ -17,6 +17,7 @@ const API = {
   generatePackage: (b) => post("/api/generate-package", b),
   paraphrase:      (b) => post("/api/paraphrase", b),
   radar:           (refresh) => fetch("/api/radar" + (refresh ? "?refresh=1" : "")).then(jsonOr(throw_)),
+  sampleImages:    () => fetch("/api/sample-images").then(jsonOr(throw_)),
   operatingModel:  () => fetch("/api/operating-model").then(jsonOr(throw_)),
   audit:           () => fetch("/api/workflow/audit").then(jsonOr(throw_)),
   variants:        (b) => post("/api/headline-variants", b),
@@ -67,10 +68,27 @@ window.addEventListener("DOMContentLoaded", async () => {
   wireRunDemoJumps();
   wireParaphraseForm();
   wireRadar();
+  loadSampleImages();
   await loadOverview();   // first paint
   // Lazy-load others on first nav click; but pre-warm freshness data
   loadFreshness();
 });
+
+/* Real Qatar Living hero images (from the scraped corpus) */
+let SAMPLE_IMAGES = [];
+async function loadSampleImages() {
+  try { const d = await API.sampleImages(); SAMPLE_IMAGES = d.images || []; } catch {}
+}
+let _imgCursor = 0;
+function heroImg() {
+  if (!SAMPLE_IMAGES.length) return null;
+  const u = SAMPLE_IMAGES[_imgCursor % SAMPLE_IMAGES.length];
+  _imgCursor++;
+  return u;
+}
+function heroStyle(url) {
+  return url ? `style="background-image:linear-gradient(180deg,rgba(0,66,109,.05),rgba(0,66,109,.35)),url('${url}');background-size:cover;background-position:center"` : "";
+}
 
 /* Run-demo jump buttons on the overview */
 function wireRunDemoJumps() {
@@ -108,6 +126,38 @@ let RADAR_LOADED = false, RADAR_ITEMS = [];
 function wireRadar() {
   const r = $("#radar-refresh");
   if (r) r.addEventListener("click", () => loadRadar(true));
+  const a = $("#radar-auto");
+  if (a) a.addEventListener("click", autoPrepareTop);
+}
+
+async function autoPrepareTop() {
+  const btn = $("#radar-auto"), out = $("#radar-auto-out");
+  if (!RADAR_ITEMS.length) { await loadRadar(false); }
+  const top = RADAR_ITEMS.slice(0, 3);
+  if (!top.length) return;
+  btn.disabled = true; btn.textContent = "Preparing…";
+  out.innerHTML = `<div class="callout" id="auto-log"><b>Auto-preparing the top ${top.length} stories…</b><br></div>`;
+  const log = $("#auto-log");
+  let queued = 0;
+  for (const it of top) {
+    log.innerHTML += `· “${escapeHtml(it.title.slice(0,60))}” → re-reporting…<br>`;
+    try {
+      const r = await API.paraphrase({ text: it.title + ". (Source headline — full text to be verified by the desk.)", source_name: it.source });
+      const pp = r.paraphrase || {};
+      const qi = await API.queueAdd({
+        headline: pp.headline, body: pp.body, risk: r.governance?.risk || "Low",
+        risk_labels: r.governance?.risk_labels || [], style_score: r.style_score?.score ?? null,
+        grounding_score: r.quality?.factual_grounding?.grounding_score ?? null,
+        source_confidence: r.governance?.source_confidence ?? null, source: it.source,
+      });
+      queued++;
+      log.innerHTML += `&nbsp;&nbsp;✓ queued as item #${qi.id} · risk ${escapeHtml(r.governance?.risk||"Low")} · style ${r.style_score?.score ?? "—"}<br>`;
+    } catch (e) {
+      log.innerHTML += `&nbsp;&nbsp;✗ ${escapeHtml(e.message)}<br>`;
+    }
+  }
+  log.innerHTML += `<br><b>${queued} drafts prepared and sent to the approval queue.</b> Open <b>Editorial Copilot</b> to review — humans approve before anything publishes.`;
+  btn.disabled = false; btn.textContent = "⚡ Auto-prepare top 3 → queue";
 }
 async function loadRadar(force) {
   if (RADAR_LOADED && !force) return;
@@ -395,6 +445,7 @@ function renderPackage(result, target) {
   const a = p.article || {};
   const today = new Date().toLocaleDateString("en-GB", {day:"numeric",month:"long",year:"numeric"});
   const bodyHtml = (a.body || "").split(/\n\s*\n/).map(x => `<p>${escapeHtml(x)}</p>`).join("");
+  const hero = heroImg(); const igimg = heroImg();
   target.innerHTML = `
     ${result.fallback_used ? `<div class="callout" style="border-color:#FBBF24">Offline fallback package (live API unavailable) — the full workflow still runs end to end.</div>` : ""}
     <div class="pkg-brief"><span class="pkg-tag">Editorial brief</span> ${escapeHtml(p.brief || "")}</div>
@@ -409,7 +460,7 @@ function renderPackage(result, target) {
         <span class="ql-avatar">QL</span>
         <span><b>Qatar Living</b> · ${escapeHtml(today)} · 3 min read</span>
       </div>
-      <div class="ql-hero">${a.headline ? "Featured image" : ""}<span class="ql-hero-tag">IMAGE</span></div>
+      <div class="ql-hero" ${heroStyle(hero)}><span class="ql-hero-tag">QL LIBRARY IMAGE</span></div>
       <div class="ql-article-body">${bodyHtml}</div>
     </div>
 
@@ -417,7 +468,7 @@ function renderPackage(result, target) {
     <div class="social-grid">
       <div class="ig-post">
         <div class="ig-head"><span class="ql-avatar sm">QL</span><b>qatarliving</b><span class="ig-more">⋯</span></div>
-        <div class="ig-image"><span class="ql-hero-tag">VISUAL</span></div>
+        <div class="ig-image" ${heroStyle(igimg)}><span class="ql-hero-tag">VISUAL</span></div>
         <div class="ig-actions">♡  💬  ➤</div>
         <div class="ig-caption"><b>qatarliving</b> ${escapeHtml(p.instagram_caption || "—")}</div>
       </div>
@@ -529,6 +580,7 @@ function renderParaphrase(r, target) {
       <div class="ql-breadcrumb">Home <span>›</span> News <span>›</span> ${escapeHtml(p.suggested_category||"Qatar")}</div>
       <h1 class="ql-article-h1">${escapeHtml(p.headline||"")}</h1>
       <div class="ql-byline"><span class="ql-avatar">QL</span><span><b>${escapeHtml(p.suggested_byline||"Qatar Living")}</b> · ${escapeHtml(today)}</span></div>
+      <div class="ql-hero" ${heroStyle(heroImg())}><span class="ql-hero-tag">QL LIBRARY IMAGE</span></div>
       <div class="ql-article-body">${bodyHtml}</div>
       ${keyFacts ? `<div class="keyfacts"><b>Key facts</b><ul>${keyFacts}</ul></div>` : ""}
     </div>

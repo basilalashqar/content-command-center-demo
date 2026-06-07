@@ -243,7 +243,7 @@
       const body = opts && opts.body ? JSON.parse(opts.body) : {};
 
       // GET passthroughs to baked JSON
-      const GETMAP = { "/api/health":"health","/api/overview":"overview","/api/evidence":"evidence","/api/style-examples":"style-examples","/api/samples":"samples","/api/prompt-preview":"prompt-preview","/api/freshness":"freshness","/api/operating-model":"operating-model","/api/cms/opportunities":"cms-opportunities" };
+      const GETMAP = { "/api/health":"health","/api/overview":"overview","/api/evidence":"evidence","/api/style-examples":"style-examples","/api/samples":"samples","/api/prompt-preview":"prompt-preview","/api/freshness":"freshness","/api/operating-model":"operating-model","/api/cms/opportunities":"cms-opportunities","/api/sample-images":"sample-images" };
       if (method === "GET" && GETMAP[path]) return J(await loadJSON(GETMAP[path]));
       if (method === "GET" && path === "/api/roi") return J(await loadJSON("roi"));
       if (path === "/api/radar") return J(await loadJSON("radar"));
