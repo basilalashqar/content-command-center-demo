@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Qatar Living — Editorial Command Center · LeenAI</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="ql-chrome">
+    <!-- Faithful Qatar Living site header -->
+    <div class="ql-topbar">
+      <img class="ql-logo" src="./assets/ql-logo.webp" alt="Qatar Living" />
+      <div class="ql-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#787878" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input placeholder="Search Qatar Living…" />
+      </div>
+      <div class="ql-top-actions">
+        <span class="ql-top-link">EN | عربي</span>
+        <span class="ql-top-link">Sign in</span>
+        <button class="ql-postad">+ Post Ad</button>
+      </div>
+    </div>
+    <div class="ql-navbar">
+      <span class="ql-nav-cat">Properties</span>
+      <span class="ql-nav-cat">Vehicles</span>
+      <span class="ql-nav-cat">Classifieds</span>
+      <span class="ql-nav-cat">Services</span>
+      <span class="ql-nav-cat">Jobs</span>
+      <span class="ql-nav-cat">Deals</span>
+      <span class="ql-nav-cat active">News</span>
+      <span class="ql-nav-cat active">Events</span>
+    </div>
+    <!-- Internal console banner -->
+    <div class="console-banner">
+      <div class="cb-title">AI Content Command Center <span>· Controlled POC · Events / News / Social</span></div>
+      <div class="cb-badges">
+        <span class="badge badge-trust">Read-only</span>
+        <span class="badge badge-trust">Source-backed</span>
+        <span class="badge badge-trust">Human-reviewed</span>
+        <span class="badge badge-stop">No auto-publish · Phase 1</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell">
+    <nav class="sidenav" aria-label="Sections">
+      <button class="nav-item active" data-section="overview">
+        <span class="nav-num">01</span><span>Overview</span>
+      </button>
+      <button class="nav-item" data-section="generate">
+        <span class="nav-num">02</span><span>Generate</span>
+      </button>
+      <button class="nav-item" data-section="rewrite">
+        <span class="nav-num">03</span><span>Rewrite</span>
+      </button>
+      <button class="nav-item" data-section="checker">
+        <span class="nav-num">04</span><span>Style Checker</span>
+      </button>
+      <button class="nav-item" data-section="governance">
+        <span class="nav-num">05</span><span>Governance</span>
+      </button>
+      <button class="nav-item" data-section="freshness">
+        <span class="nav-num">06</span><span>Event Freshness</span>
+      </button>
+      <button class="nav-item" data-section="cleanup">
+        <span class="nav-num">07</span><span>CMS Cleanup</span>
+      </button>
+      <button class="nav-item" data-section="evidence">
+        <span class="nav-num">08</span><span>Corpus Evidence</span>
+      </button>
+      <button class="nav-item" data-section="copilot">
+        <span class="nav-num">09</span><span>Editorial Copilot</span>
+      </button>
+      <button class="nav-item" data-section="cms">
+        <span class="nav-num">10</span><span>CMS Integration</span>
+      </button>
+      <button class="nav-item" data-section="roi">
+        <span class="nav-num">11</span><span>ROI Calculator</span>
+      </button>
+      <button class="nav-item" data-section="operating">
+        <span class="nav-num">12</span><span>Operating Model</span>
+      </button>
+      <div class="nav-foot">
+        <div class="nav-foot-label">Pipeline</div>
+        <div class="nav-foot-value" style="font-size:11px;line-height:1.5">Radar → Brief → Draft → Governance → Approval → Publish → Learn</div>
+        <div class="nav-foot-label" style="margin-top:14px">Corpus</div>
+        <div class="nav-foot-value">1,999 articles · 118 events</div>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <!-- ───────────────────── 01 OVERVIEW ───────────────────── -->
+      <section id="section-overview" class="section visible">
+        <div class="section-head">
+          <h1>AI Content Command Center</h1>
+          <p class="section-sub">
+            A controlled content operating workflow for Qatar Living's
+            <b>Events, News &amp; Social</b> team — not a generic AI writer. The
+            system detects the opportunity, prepares the content, reviews
+            governance, routes it for human approval, then measures and learns.
+            <b>AI prepares the work; humans approve every decision.</b>
+          </p>
+        </div>
+
+        <!-- Pipeline strip -->
+        <div class="pipeline-strip">
+          <span class="pipe">Radar</span><span class="pipe-arrow">→</span>
+          <span class="pipe">Brief</span><span class="pipe-arrow">→</span>
+          <span class="pipe">Draft</span><span class="pipe-arrow">→</span>
+          <span class="pipe">Governance</span><span class="pipe-arrow">→</span>
+          <span class="pipe">Human Approval</span><span class="pipe-arrow">→</span>
+          <span class="pipe">Publish / Schedule</span><span class="pipe-arrow">→</span>
+          <span class="pipe">Measure</span><span class="pipe-arrow">→</span>
+          <span class="pipe">Learn</span>
+        </div>
+
+        <!-- Run demo entry -->
+        <div class="run-demo-bar">
+          <div>
+            <div class="run-demo-title">Run the demo</div>
+            <div class="run-demo-sub">Three controlled scenarios — New Event package, Sensitive News governance, Changed/Cancelled event.</div>
+          </div>
+          <div class="run-demo-actions">
+            <button class="btn-primary" data-jump="generate">▶ New Event package</button>
+            <button class="btn-secondary" data-jump="governance">Sensitive News</button>
+            <button class="btn-secondary" data-jump="freshness">Changed / Cancelled event</button>
+          </div>
+        </div>
+
+        <div class="stat-grid" id="stat-grid">
+          <div class="stat-card stat-loading">Loading corpus statistics…</div>
+        </div>
+
+        <div class="card explainer">
+          <h3>What this system proves</h3>
+          <ul class="bullets">
+            <li><b>It writes in the Qatar Living voice.</b> The brand model is derived from a study of 1,999 published articles: entity-first headlines, attribution-heavy prose, the institutional stance verbs the newsroom actually uses.</li>
+            <li><b>It enforces governance automatically.</b> 46.5% of the analysed content needs senior review; the system routes those items to humans by default and never auto-publishes.</li>
+            <li><b>It cleans CMS residue at publish time.</b> Thousands of stray <code>&amp;nbsp;</code> tokens and ~1,425 repeated boilerplate CTAs were detected across the corpus.</li>
+            <li><b>It surfaces the event-freshness problem on day one.</b> 57.6% of listed events had already ended at study time (80.5% today); the system flags every one with a suggested correction for approval.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 02 GENERATE ───────────────────── -->
+      <section id="section-generate" class="section">
+        <div class="section-head">
+          <h1>New Event / News Content Package</h1>
+          <p class="section-sub">
+            Provide a brief. The system returns a <b>complete multi-format
+            package</b> — brief, article, Instagram caption, story copy, push
+            notification, video/Reel script, and a poster brief — with a
+            governance verdict and source-grounding check. Then route it to the
+            approval queue.
+          </p>
+        </div>
+
+        <div class="scenario-row" id="scenario-row">
+          <span class="scenario-label">Demo scenarios:</span>
+        </div>
+
+        <div class="generate-grid">
+          <div class="card form-card">
+            <div class="form-grid">
+              <label class="field field-wide">
+                <span>Topic / headline idea</span>
+                <input id="g-topic" type="text" placeholder="HH the Amir receives Pakistani PM in Doha" />
+              </label>
+
+              <label class="field">
+                <span>Entity</span>
+                <input id="g-entity" type="text" placeholder="HH Sheikh Tamim bin Hamad Al Thani" />
+              </label>
+
+              <label class="field">
+                <span>Category</span>
+                <input id="g-category" type="text" placeholder="Diplomatic / Royal" />
+              </label>
+
+              <label class="field">
+                <span>Date</span>
+                <input id="g-date" type="text" placeholder="2026-06-07" />
+              </label>
+
+              <label class="field">
+                <span>Risk hint</span>
+                <select id="g-risk-hint">
+                  <option value="">auto</option>
+                  <option>High</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
+              </label>
+
+              <label class="field field-wide">
+                <span>Key facts</span>
+                <textarea id="g-facts" rows="4" placeholder="The Amir received HE Mr Sharif at the Amiri Diwan…"></textarea>
+              </label>
+
+              <label class="field field-wide">
+                <span>Quote (optional)</span>
+                <textarea id="g-quote" rows="2" placeholder="We value Pakistan's stance — HH the Amir"></textarea>
+              </label>
+
+              <label class="field">
+                <span>Length</span>
+                <select id="g-length">
+                  <option>short</option>
+                  <option selected>standard</option>
+                  <option>long</option>
+                </select>
+              </label>
+
+              <label class="field" style="align-self:end">
+                <span>Mode</span>
+                <select id="g-mode" title="Output mode">
+                  <option value="package" selected>Full package (multi-format)</option>
+                  <option value="stream">Article only (live stream)</option>
+                  <option value="full">Article only (one shot)</option>
+                </select>
+              </label>
+
+              <div class="field" style="align-self:end">
+                <button id="g-submit" class="btn-primary">Generate package</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card output-card" id="g-output">
+            <div class="empty-state">Generated draft, governance, and style score will appear here.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 03 REWRITE ───────────────────── -->
+      <section id="section-rewrite" class="section">
+        <div class="section-head">
+          <h1>Rewrite in Qatar Living voice</h1>
+          <p class="section-sub">Paste rough or casual text. LeenAI rewrites it into Qatar Living's institutional register, drops forbidden language, and adds attribution.</p>
+        </div>
+
+        <div class="scenario-row" id="rewrite-samples-row">
+          <span class="scenario-label">Try a sample:</span>
+        </div>
+
+        <div class="rewrite-grid">
+          <div class="card">
+            <h3>Original</h3>
+            <textarea id="r-input" rows="10" placeholder="Paste rough text here…"></textarea>
+            <button id="r-submit" class="btn-primary" style="margin-top:14px">Rewrite</button>
+          </div>
+          <div class="card" id="r-output">
+            <div class="empty-state">Rewritten draft, change summary, and a before/after style score will appear here.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 04 STYLE CHECKER ───────────────────── -->
+      <section id="section-checker" class="section">
+        <div class="section-head">
+          <h1>Style Compliance Checker</h1>
+          <p class="section-sub">Paste a draft. The checker scores it against seven Qatar-Living style dimensions and lists suggested edits.</p>
+        </div>
+        <div class="rewrite-grid">
+          <div class="card">
+            <h3>Draft</h3>
+            <textarea id="c-input" rows="14" placeholder="First line is treated as the headline. Following lines are the body."></textarea>
+            <div class="row" style="margin-top:14px;gap:14px">
+              <label class="field" style="flex:0 0 auto">
+                <span>Intended length</span>
+                <select id="c-length">
+                  <option>short</option>
+                  <option selected>standard</option>
+                  <option>long</option>
+                </select>
+              </label>
+              <button id="c-submit" class="btn-primary">Score</button>
+            </div>
+          </div>
+          <div class="card" id="c-output">
+            <div class="empty-state">Score and per-dimension breakdown will appear here.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 05 GOVERNANCE ───────────────────── -->
+      <section id="section-governance" class="section">
+        <div class="section-head">
+          <h1>Governance Risk Classifier</h1>
+          <p class="section-sub">Paste any draft or headline. The classifier returns the risk tier, labels detected, and the required Qatar Living approval route.</p>
+        </div>
+        <div class="rewrite-grid">
+          <div class="card">
+            <h3>Draft</h3>
+            <textarea id="gov-input" rows="14" placeholder="Paste draft text or a headline…"></textarea>
+            <button id="gov-submit" class="btn-primary" style="margin-top:14px">Classify</button>
+          </div>
+          <div class="card" id="gov-output">
+            <div class="empty-state">Risk tier, labels, and approval route will appear here.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 06 EVENT FRESHNESS ───────────────────── -->
+      <section id="section-freshness" class="section">
+        <div class="section-head">
+          <h1>Event Freshness Monitor</h1>
+          <p class="section-sub">Surfaces stale events from <code>stale_events.jsonl</code> and proposes a lifecycle action per event.</p>
+        </div>
+        <div id="freshness-summary" class="callout">Loading event freshness report…</div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <table id="freshness-table">
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Days stale</th>
+                <th>CMS status</th>
+                <th>Suggested action</th>
+              </tr>
+            </thead>
+            <tbody><tr><td colspan="6" style="padding:18px">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 07 CMS CLEANUP ───────────────────── -->
+      <section id="section-cleanup" class="section">
+        <div class="section-head">
+          <h1>CMS Cleanup Assistant</h1>
+          <p class="section-sub">Paste a messy article body. The cleaner strips <code>&amp;nbsp;</code>, the repeated social-CTA boilerplate, stray HTML, and whitespace noise.</p>
+        </div>
+        <div class="rewrite-grid">
+          <div class="card">
+            <h3>Raw body</h3>
+            <textarea id="cl-input" rows="12" placeholder="Paste raw HTML/article body here…"></textarea>
+            <div class="row" style="margin-top:14px;gap:14px">
+              <button id="cl-load-sample" class="btn-secondary">Load sample dirty body</button>
+              <button id="cl-submit" class="btn-primary">Clean</button>
+            </div>
+          </div>
+          <div class="card" id="cl-output">
+            <div class="empty-state">Cleaned text and a count of issues removed will appear here.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 08 EVIDENCE ───────────────────── -->
+      <section id="section-evidence" class="section">
+        <div class="section-head">
+          <h1>Corpus Evidence</h1>
+          <p class="section-sub">Every style rule the AI follows is grounded in the corpus. The chips below come from the actual frequency tables in <code>analysis_data.json</code>.</p>
+        </div>
+
+        <div class="evidence-grid">
+          <div class="card">
+            <h3>Top headline openers</h3>
+            <p class="muted">The entity-first pattern — 97.3% of QL headlines begin with one of these.</p>
+            <div class="chips" id="ev-openers"></div>
+          </div>
+
+          <div class="card">
+            <h3>Editorial stance verbs</h3>
+            <p class="muted">The verb palette LeenAI prefers. Every one is a top-25 corpus hit.</p>
+            <div class="chips" id="ev-verbs"></div>
+          </div>
+
+          <div class="card">
+            <h3>Avoided language</h3>
+            <p class="muted">Probe terms that appear in &lt;1% of the corpus. LeenAI never produces these.</p>
+            <div class="chips chips-warn" id="ev-avoid"></div>
+          </div>
+
+          <div class="card">
+            <h3>Persona summary</h3>
+            <blockquote class="persona">
+              Institutional, formal, optimistic, ceremonial, attribution-heavy.
+              Entity-first headlines. Stance verbs: announced, launched, stressed,
+              affirmed, welcomed, signed. Honorifics respected (29% of articles).
+              Avoids opinion, clickbait, and sensational language.
+            </blockquote>
+          </div>
+
+          <div class="card span-2">
+            <h3>Sample headlines from the corpus</h3>
+            <ul class="serif-list" id="ev-headlines"></ul>
+          </div>
+
+          <div class="card span-2">
+            <h3>The brand-voice prompt</h3>
+            <p class="muted">This is the exact system prompt LeenAI uses for every Qatar Living draft.</p>
+            <pre id="ev-prompt" class="prompt-pre">Loading…</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 09 EDITORIAL COPILOT ───────────────────── -->
+      <section id="section-copilot" class="section">
+        <div class="section-head">
+          <h1>Editorial Copilot</h1>
+          <p class="section-sub">
+            The human-in-the-loop queue. AI prepares the draft; the editor
+            approves, edits-and-approves, or rejects with a reason. Every
+            decision feeds the learning loop below — this is how the system
+            improves from editor behaviour over time.
+          </p>
+        </div>
+
+        <div class="row" style="gap:10px;margin-bottom:14px;flex-wrap:wrap">
+          <button id="cp-seed" class="btn-secondary">Send a generated draft to the queue</button>
+          <button id="cp-refresh" class="btn-secondary">Refresh queue</button>
+          <button id="cp-reset" class="btn-secondary">Reset queue</button>
+        </div>
+
+        <div class="generate-grid">
+          <div class="card" style="padding:0;overflow:hidden">
+            <div style="padding:14px 18px;border-bottom:1px solid var(--rule)"><h3 style="margin:0">Review queue</h3></div>
+            <div id="cp-queue"><div class="empty-state" style="padding:18px">Queue is empty. Click “Send a generated draft to the queue”.</div></div>
+          </div>
+          <div class="card">
+            <h3>Learning loop</h3>
+            <p class="muted">Reviewer reasons aggregated into candidate prompt-rule improvements — the §6 learning hook.</p>
+            <div id="cp-learning"><div class="empty-state">Act on a few queue items to populate the learning loop.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 10 CMS INTEGRATION ───────────────────── -->
+      <section id="section-cms" class="section">
+        <div class="section-head">
+          <h1>CMS Integration <span class="mock-tag">MOCK CONNECTOR</span></h1>
+          <p class="section-sub">
+            Demonstrates the integration <i>contract</i>, not a live system.
+            Read-only pull of content opportunities; drafts pushed as
+            <b>draft status only</b> — never auto-published. A real adapter swaps
+            these calls for the CMS REST API (e.g. WordPress <code>status=draft</code>).
+          </p>
+        </div>
+        <div class="callout">
+          <b>Why this matters:</b> the #1 question from any media buyer is “how do you
+          integrate with our CMS?”. The answer is: read-only first, drafts only,
+          human publishes. This panel makes that posture concrete.
+        </div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div style="padding:14px 18px;border-bottom:1px solid var(--rule)"><h3 style="margin:0">Content opportunities (read-only pull)</h3></div>
+          <div id="cms-opps"><div class="empty-state" style="padding:18px">Loading…</div></div>
+        </div>
+        <div id="cms-push-out" style="margin-top:16px"></div>
+      </section>
+
+      <!-- ───────────────────── 11 ROI CALCULATOR ───────────────────── -->
+      <section id="section-roi" class="section">
+        <div class="section-head">
+          <h1>ROI Calculator</h1>
+          <p class="section-sub">
+            The number executives actually decide on. Conservative by design —
+            adoption is set below 100% and every formula is shown.
+          </p>
+        </div>
+        <div class="generate-grid">
+          <div class="card form-card">
+            <div class="form-grid">
+              <label class="field"><span>Editors</span><input id="roi-editors" type="number" value="20" /></label>
+              <label class="field"><span>Articles / day</span><input id="roi-articles" type="number" value="40" /></label>
+              <label class="field"><span>Minutes saved / article</span><input id="roi-minutes" type="number" value="12" /></label>
+              <label class="field"><span>Working days / month</span><input id="roi-days" type="number" value="22" /></label>
+              <label class="field"><span>Loaded cost / hour (USD)</span><input id="roi-cost" type="number" value="25" /></label>
+              <label class="field"><span>Adoption rate (0-1)</span><input id="roi-adopt" type="number" step="0.05" value="0.6" /></label>
+              <div class="field field-wide" style="align-self:end">
+                <button id="roi-submit" class="btn-primary">Calculate ROI</button>
+              </div>
+            </div>
+          </div>
+          <div class="card" id="roi-output">
+            <div class="empty-state">Adjust the inputs and click Calculate ROI.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────── 12 OPERATING MODEL ───────────────────── -->
+      <section id="section-operating" class="section">
+        <div class="section-head">
+          <h1>Operating Model &amp; KPI Readiness</h1>
+          <p class="section-sub">
+            How the system becomes part of the company's daily workflow — every
+            stage has an owner, a KPI, and a control. This is what separates an
+            operating layer from an AI experiment.
+          </p>
+        </div>
+        <div class="callout" id="op-principle">Loading…</div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <table id="op-table">
+            <thead><tr><th>Workflow stage</th><th>Owner</th><th>KPI</th><th>Control</th></tr></thead>
+            <tbody><tr><td colspan="4" style="padding:18px">Loading…</td></tr></tbody>
+          </table>
+        </div>
+        <h3 style="margin-top:20px">Audit trail (every decision logged)</h3>
+        <p class="muted">Source · draft · reviewer · decision · reason · timestamp — populated as the approval queue is used.</p>
+        <div class="card" style="padding:0;overflow:hidden">
+          <table id="audit-table">
+            <thead><tr><th>Time</th><th>Item</th><th>Action</th><th>Reviewer</th><th>Reason</th></tr></thead>
+            <tbody><tr><td colspan="5" style="padding:18px" class="muted">No decisions yet. Use the Editorial Copilot to approve/edit/reject items.</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="./static-shim.js"></script>
+  <script src="./app.js"></script>
+<div style="position:fixed;right:10px;bottom:10px;background:#00426d;color:#fff;font:600 11px Public Sans,sans-serif;padding:6px 12px;border-radius:6px;z-index:99;opacity:.9">Static showcase · no backend</div></body>
+</html>
