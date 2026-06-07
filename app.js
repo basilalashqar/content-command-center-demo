@@ -152,6 +152,19 @@ function wireRunDemoJumps() {
     const navBtn = document.querySelector(`.nav-item[data-section="${target}"]`);
     if (navBtn) navBtn.click();
   }));
+  // One-click Sensitive-News demo: load the government scenario + auto-generate
+  const sens = document.querySelector('[data-demo="sensitive"]');
+  if (sens) sens.addEventListener("click", async () => {
+    document.querySelector('.nav-item[data-section="generate"]').click();
+    await loadScenarios();
+    await new Promise(r => setTimeout(r, 250));
+    const govBtn = Array.from(document.querySelectorAll("#scenario-row .scenario-btn"))
+      .find(b => /Government/i.test(b.textContent));
+    if (govBtn) govBtn.click();
+    const mode = $("#g-mode"); if (mode) mode.value = "package";
+    await new Promise(r => setTimeout(r, 150));
+    $("#g-submit").click();
+  });
 }
 
 /* ───────── Nav ───────── */
