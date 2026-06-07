@@ -152,17 +152,23 @@ function wireRunDemoJumps() {
     const navBtn = document.querySelector(`.nav-item[data-section="${target}"]`);
     if (navBtn) navBtn.click();
   }));
-  // One-click Sensitive-News demo: load the government scenario + auto-generate
+  // One-click Sensitive-News demo: populate the government scenario + auto-generate.
+  // Pull the scenario straight from /api/samples so we never race the rendered buttons.
   const sens = document.querySelector('[data-demo="sensitive"]');
   if (sens) sens.addEventListener("click", async () => {
     document.querySelector('.nav-item[data-section="generate"]').click();
-    await loadScenarios();
-    await new Promise(r => setTimeout(r, 250));
-    const govBtn = Array.from(document.querySelectorAll("#scenario-row .scenario-btn"))
-      .find(b => /Government/i.test(b.textContent));
-    if (govBtn) govBtn.click();
-    const mode = $("#g-mode"); if (mode) mode.value = "package";
-    await new Promise(r => setTimeout(r, 150));
+    let sc = null;
+    try {
+      const s = await API.samples();
+      sc = (s.scenarios || []).find(x => x.id === "gov_announcement") || (s.scenarios || [])[0];
+    } catch {}
+    if (!sc) return;
+    const bset = (id, v) => { const el = $(id); if (el) el.value = v || ""; };
+    bset("#g-topic", sc.brief.topic);   bset("#g-entity", sc.brief.entity);
+    bset("#g-category", sc.brief.category); bset("#g-date", sc.brief.date);
+    bset("#g-facts", sc.brief.facts);   bset("#g-quote", sc.brief.quote);
+    bset("#g-risk-hint", sc.brief.risk_hint || ""); bset("#g-length", sc.brief.length || "standard");
+    bset("#g-mode", "package");
     $("#g-submit").click();
   });
 }
