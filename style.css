@@ -1153,3 +1153,24 @@ tbody tr:hover td { background: #f7fafc; }
   font: 600 11px var(--sans); padding: 4px 10px; border-radius: 5px; cursor: pointer;
 }
 .copy-btn:hover { background: var(--ink-3); border-color: var(--orange); }
+
+/* ════════════════ News Radar ════════════════ */
+.nav-live { color: #d92d20; font-size: 9px; font-weight: 800; letter-spacing: .04em; margin-left: 4px; animation: livepulse 2s infinite; }
+@keyframes livepulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+.radar-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: #fff; border: 1px solid var(--rule); padding: 12px 16px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.radar-status { font-size: 13px; color: #344054; }
+.radar-risk { display: inline-flex; gap: 6px; }
+.radar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.radar-card {
+  background: #fff; border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow-card);
+}
+.radar-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.radar-src { font-size: 11.5px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: .03em; }
+.radar-localdot { color: #079455; }
+.radar-title { font-size: 15px; font-weight: 600; line-height: 1.35; color: #101828; flex: 1; }
+.radar-meta { font-size: 11px; color: var(--muted); }
+.radar-prep { font-size: 12px; padding: 8px 12px; margin-top: auto; }

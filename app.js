@@ -16,6 +16,7 @@ const API = {
   cleanup:         (b) => post("/api/cleanup", b),
   generatePackage: (b) => post("/api/generate-package", b),
   paraphrase:      (b) => post("/api/paraphrase", b),
+  radar:           (refresh) => fetch("/api/radar" + (refresh ? "?refresh=1" : "")).then(jsonOr(throw_)),
   operatingModel:  () => fetch("/api/operating-model").then(jsonOr(throw_)),
   audit:           () => fetch("/api/workflow/audit").then(jsonOr(throw_)),
   variants:        (b) => post("/api/headline-variants", b),
@@ -65,6 +66,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   wireCopilotButtons();
   wireRunDemoJumps();
   wireParaphraseForm();
+  wireRadar();
   await loadOverview();   // first paint
   // Lazy-load others on first nav click; but pre-warm freshness data
   loadFreshness();
@@ -96,8 +98,60 @@ function wireNav() {
       if (target === "cms")      loadCmsOpps();
       if (target === "roi")      loadRoiDefault();
       if (target === "operating") { loadOperatingModel(); loadAudit(); }
+      if (target === "radar") loadRadar(false);
     });
   });
+}
+
+/* ───────── News Radar ───────── */
+let RADAR_LOADED = false, RADAR_ITEMS = [];
+function wireRadar() {
+  const r = $("#radar-refresh");
+  if (r) r.addEventListener("click", () => loadRadar(true));
+}
+async function loadRadar(force) {
+  if (RADAR_LOADED && !force) return;
+  RADAR_LOADED = true;
+  const grid = $("#radar-grid"), status = $("#radar-status");
+  if (force) { status.textContent = "Re-scraping live Qatar news…"; grid.innerHTML = `<div class="empty-state"><span class="spinner"></span> scraping…</div>`; }
+  try {
+    const d = await API.radar(force);
+    RADAR_ITEMS = d.items || [];
+    status.innerHTML = `<b>${d.count}</b> live items · updated ${escapeHtml(d.last_updated || "—")} · auto-refreshes every ~12 min`;
+    const rc = d.risk_counts || {};
+    $("#radar-riskmix").innerHTML = `<span class="risk-badge High" style="padding:2px 8px">${rc.High||0} High</span> <span class="risk-badge Medium" style="padding:2px 8px">${rc.Medium||0} Med</span> <span class="risk-badge Low" style="padding:2px 8px">${rc.Low||0} Low</span>`;
+    if (!RADAR_ITEMS.length) { grid.innerHTML = `<div class="empty-state">No items right now — try Refresh.</div>`; return; }
+    grid.innerHTML = RADAR_ITEMS.map(it => `
+      <div class="radar-card">
+        <div class="radar-card-top">
+          <span class="radar-src">${it.is_local ? '<span class="radar-localdot" title="Qatar local source">●</span> ' : ''}${escapeHtml(it.source)}</span>
+          <span class="risk-badge ${it.risk}" style="padding:2px 8px;font-size:10px">${it.risk}</span>
+        </div>
+        <div class="radar-title">${escapeHtml(it.title)}</div>
+        <div class="radar-meta">${escapeHtml((it.published||"").slice(0,22))}${it.no_auto_publish ? ' · needs senior review' : ''}</div>
+        <button class="btn-primary radar-prep" data-id="${it.id}">Prepare in Qatar Living style →</button>
+      </div>`).join("");
+    grid.querySelectorAll(".radar-prep").forEach(b => b.onclick = () => prepareRadarItem(+b.dataset.id, b));
+  } catch (e) {
+    status.textContent = "Radar error: " + e.message;
+    grid.innerHTML = `<div class="error-box">${escapeHtml(e.message)}</div>`;
+  }
+}
+async function prepareRadarItem(id, btn) {
+  const it = RADAR_ITEMS.find(x => x.id === id);
+  if (!it) return;
+  const out = $("#radar-output");
+  btn.disabled = true; btn.textContent = "Preparing…";
+  out.innerHTML = `<div class="card"><div class="empty-state"><span class="spinner"></span> Re-reporting "${escapeHtml(it.title.slice(0,70))}" in Qatar Living tone…</div></div>`;
+  out.scrollIntoView({ behavior: "smooth", block: "start" });
+  try {
+    const r = await API.paraphrase({ text: it.title + ". (Source headline — full text to be verified by the desk.)", source_name: it.source });
+    const card = document.createElement("div"); card.className = "card";
+    out.innerHTML = ""; out.appendChild(card);
+    renderParaphrase(r, card);
+  } catch (e) {
+    out.innerHTML = `<div class="error-box">${escapeHtml(e.message)}</div>`;
+  } finally { btn.disabled = false; btn.textContent = "Prepare in Qatar Living style →"; }
 }
 
 /* ───────── Overview ───────── */

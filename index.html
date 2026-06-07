@@ -51,41 +51,44 @@
       <button class="nav-item active" data-section="overview">
         <span class="nav-num">01</span><span>Overview</span>
       </button>
+      <button class="nav-item" data-section="radar">
+        <span class="nav-num">02</span><span>News Radar <span class="nav-live">● LIVE</span></span>
+      </button>
       <button class="nav-item" data-section="generate">
-        <span class="nav-num">02</span><span>Generate</span>
+        <span class="nav-num">03</span><span>Generate</span>
       </button>
       <button class="nav-item" data-section="paraphrase">
-        <span class="nav-num">03</span><span>Paraphrase News</span>
+        <span class="nav-num">04</span><span>Paraphrase News</span>
       </button>
       <button class="nav-item" data-section="rewrite">
-        <span class="nav-num">04</span><span>Rewrite</span>
+        <span class="nav-num">05</span><span>Rewrite</span>
       </button>
       <button class="nav-item" data-section="checker">
-        <span class="nav-num">04</span><span>Style Checker</span>
+        <span class="nav-num">06</span><span>Style Checker</span>
       </button>
       <button class="nav-item" data-section="governance">
-        <span class="nav-num">05</span><span>Governance</span>
+        <span class="nav-num">07</span><span>Governance</span>
       </button>
       <button class="nav-item" data-section="freshness">
-        <span class="nav-num">06</span><span>Event Freshness</span>
+        <span class="nav-num">08</span><span>Event Freshness</span>
       </button>
       <button class="nav-item" data-section="cleanup">
-        <span class="nav-num">07</span><span>CMS Cleanup</span>
+        <span class="nav-num">09</span><span>CMS Cleanup</span>
       </button>
       <button class="nav-item" data-section="evidence">
-        <span class="nav-num">08</span><span>Corpus Evidence</span>
+        <span class="nav-num">10</span><span>Corpus Evidence</span>
       </button>
       <button class="nav-item" data-section="copilot">
-        <span class="nav-num">09</span><span>Editorial Copilot</span>
+        <span class="nav-num">11</span><span>Editorial Copilot</span>
       </button>
       <button class="nav-item" data-section="cms">
-        <span class="nav-num">10</span><span>CMS Integration</span>
+        <span class="nav-num">12</span><span>CMS Integration</span>
       </button>
       <button class="nav-item" data-section="roi">
-        <span class="nav-num">11</span><span>ROI Calculator</span>
+        <span class="nav-num">13</span><span>ROI Calculator</span>
       </button>
       <button class="nav-item" data-section="operating">
-        <span class="nav-num">12</span><span>Operating Model</span>
+        <span class="nav-num">14</span><span>Operating Model</span>
       </button>
       <div class="nav-foot">
         <div class="nav-foot-label">Pipeline</div>
@@ -150,7 +153,36 @@
         </div>
       </section>
 
-      <!-- ───────────────────── 02 GENERATE ───────────────────── -->
+      <!-- ───────────────────── 02 NEWS RADAR ───────────────────── -->
+      <section id="section-radar" class="section">
+        <div class="section-head">
+          <h1>Live News Radar</h1>
+          <p class="section-sub">
+            The pilot continuously scrapes real Qatar news (QNA, The Peninsula,
+            Qatar Tribune, Gulf Times and more) and classifies each item for
+            governance risk. Pick any story and the system <b>re-reports it in
+            Qatar Living's tone</b> — reworded, governed, queued for approval.
+            Only headline + source are stored; the article is written fresh.
+          </p>
+        </div>
+
+        <div class="radar-bar">
+          <div class="radar-status" id="radar-status">Loading live feed…</div>
+          <div class="row" style="gap:8px">
+            <span class="radar-risk" id="radar-riskmix"></span>
+            <button class="btn-secondary" id="radar-refresh">↻ Refresh now</button>
+          </div>
+        </div>
+
+        <div class="radar-grid" id="radar-grid">
+          <div class="empty-state">Scraping live Qatar news…</div>
+        </div>
+
+        <!-- where the prepared QL package appears -->
+        <div id="radar-output" style="margin-top:18px"></div>
+      </section>
+
+      <!-- ───────────────────── 03 GENERATE ───────────────────── -->
       <section id="section-generate" class="section">
         <div class="section-head">
           <h1>New Event / News Content Package</h1>
