@@ -259,9 +259,11 @@ async function runCompare(id, btn) {
         ${scoreRow("CMS hygiene issues", r.cms_issues_in_original, 0, "pilot")}
       </div>
       <div class="muted" style="margin-top:10px;font-size:12.5px;line-height:1.5">
-        <b>Honest read:</b> the pilot does not replace Qatar Living's editors. It produces a
-        <b>clean, source-faithful first draft from verified facts</b> — grounding 100, no CMS
-        residue, no auto-publish. <b>Editors remain in control.</b>
+        <b>Honest read:</b> the pilot's draft is <b>independently worded from the same facts</b>
+        (names, figures and direct quotes are preserved by design) — it is not a copy. It does
+        <b>not replace Qatar Living's editors</b>: it produces a clean, source-faithful first
+        draft — grounding ${escapeHtml(String(p.scores.grounding ?? "—"))}, no CMS residue, no
+        auto-publish. <b>Editors remain in control.</b>
       </div>
     `;
   } catch (e) {
@@ -718,8 +720,8 @@ function renderParaphrase(r, target) {
   const removed = (p.removed||[]).map(x=>`<span class="chip">${escapeHtml(x)}</span>`).join("");
   const keyFacts = (p.key_facts||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join("");
   const okBadge = p.paraphrase_ok
-    ? `<span class="badge badge-trust">Original rewrite · ${p.overlap_pct}% source overlap</span>`
-    : `<span class="badge badge-stop">High overlap ${p.overlap_pct}% — reword further</span>`;
+    ? `<span class="badge badge-trust">Original rewrite · facts &amp; quotes preserved</span>`
+    : `<span class="badge badge-stop">Too close to source — reword further</span>`;
   target.innerHTML = `
     <div class="preview-label">Re-reported for Qatar Living ${okBadge}
       <button class="copy-btn" data-copy="pp-article">⧉ Copy article</button>
