@@ -1226,3 +1226,20 @@ tbody tr:hover td { background: #f7fafc; }
   .ql-article { padding: 18px; }
   .ql-article-h1 { font-size: 22px; }
 }
+
+/* ════════════════ Compare to real ════════════════ */
+.cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 900px){ .cmp-grid { grid-template-columns: 1fr; } }
+.cmp-col { display: flex; flex-direction: column; }
+.cmp-head { font-weight: 700; font-size: 13px; padding: 8px 0; display: flex; align-items: center; gap: 8px; }
+.cmp-head-real { color: #344054; }
+.cmp-head-pilot { color: var(--navy); }
+.cmp-scores { margin-top: 16px; border: 1px solid var(--rule); background: #fff; }
+.cmp-metric { display: grid; grid-template-columns: 2fr 1fr 1fr; padding: 9px 14px; border-bottom: 1px solid var(--rule); font-size: 13px; }
+.cmp-metric:last-child { border-bottom: none; }
+.cmp-metric span:not(.cmp-metric-label) { text-align: center; font-weight: 600; }
+.cmp-metric-head { background: var(--navy); color: #fff; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: .05em; }
+.cmp-metric-head span { color: #fff !important; }
+.cmp-metric-label { color: #344054; }
+.cmp-v.cmp-win { color: var(--low); }
+.cmp-win::after { content: " ✓"; }

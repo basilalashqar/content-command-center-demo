@@ -253,6 +253,13 @@
       if (method === "GET" && GETMAP[path]) return J(await loadJSON(GETMAP[path]));
       if (method === "GET" && path === "/api/roi") return J(await loadJSON("roi"));
       if (path === "/api/radar") return J(await loadJSON("radar"));
+      if (path === "/api/compare-samples") return J(await loadJSON("compare-samples"));
+      if (path === "/api/compare") {
+        const runs = await loadJSON("compare-runs");
+        const r = runs[String(body.id)];
+        if (r) return J(r);
+        return new Response(JSON.stringify({detail:"sample not baked"}), {status:404, headers:{"Content-Type":"application/json"}});
+      }
       if (method === "GET" && path === "/api/workflow/queue") return J({ items: QUEUE });
       if (method === "GET" && path === "/api/workflow/learning") return J(learning());
       if (method === "GET" && path === "/api/workflow/audit") return J(audit());

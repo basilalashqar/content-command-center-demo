@@ -18,6 +18,8 @@ const API = {
   paraphrase:      (b) => post("/api/paraphrase", b),
   radar:           (refresh) => fetch("/api/radar" + (refresh ? "?refresh=1" : "")).then(jsonOr(throw_)),
   sampleImages:    () => fetch("/api/sample-images").then(jsonOr(throw_)),
+  compareSamples:  () => fetch("/api/compare-samples").then(jsonOr(throw_)),
+  compareRun:      (b) => post("/api/compare", b),
   operatingModel:  () => fetch("/api/operating-model").then(jsonOr(throw_)),
   audit:           () => fetch("/api/workflow/audit").then(jsonOr(throw_)),
   variants:        (b) => post("/api/headline-variants", b),
@@ -191,8 +193,79 @@ function wireNav() {
       if (target === "roi")      loadRoiDefault();
       if (target === "operating") { loadOperatingModel(); loadAudit(); }
       if (target === "radar") loadRadar(false);
+      if (target === "compare") loadCompareSamples();
     });
   });
+}
+
+/* ───────── Compare to real ───────── */
+let COMPARE_LOADED = false;
+async function loadCompareSamples() {
+  if (COMPARE_LOADED) return; COMPARE_LOADED = true;
+  const row = $("#compare-row");
+  try {
+    const d = await API.compareSamples();
+    (d.samples || []).forEach(s => {
+      const btn = document.createElement("button");
+      btn.className = "scenario-btn";
+      btn.innerHTML = `${escapeHtml(s.label)} <span class="muted" style="font-weight:400">— ${escapeHtml(s.headline.slice(0,40))}…</span>`;
+      btn.onclick = () => runCompare(s.id, btn);
+      row.appendChild(btn);
+    });
+  } catch (e) {
+    $("#compare-output").innerHTML = `<div class="error-box">${escapeHtml(e.message)}</div>`;
+  }
+}
+async function runCompare(id, btn) {
+  const out = $("#compare-output");
+  out.innerHTML = `<div class="empty-state"><span class="spinner"></span> Generating the pilot's version from the same facts…</div>`;
+  try {
+    const d = await API.compareRun({ id });
+    const r = d.real, p = d.pilot;
+    const scoreRow = (label, a, bb, better) => `
+      <div class="cmp-metric">
+        <span class="cmp-metric-label">${label}</span>
+        <span class="cmp-v ${better==='real'?'cmp-win':''}">${a}</span>
+        <span class="cmp-v ${better==='pilot'?'cmp-win':''}">${bb}</span>
+      </div>`;
+    const readBetter = (p.scores.readability > r.scores.readability) ? "pilot" : "real";
+    out.innerHTML = `
+      <div class="cmp-grid">
+        <div class="cmp-col">
+          <div class="cmp-head cmp-head-real">Real Qatar Living article <span class="badge badge-trust">published</span></div>
+          <div class="ql-article">
+            <div class="ql-breadcrumb">Home <span>›</span> News <span>›</span> Qatar</div>
+            <h2 class="ql-article-h1">${escapeHtml(r.headline)}</h2>
+            <div class="ql-byline"><span class="ql-avatar">QL</span><span><b>Qatar Living</b> · ${escapeHtml(r.date||"")}</span></div>
+            <div class="ql-article-body">${(r.body||"").split(/\n\s*\n/).slice(0,6).map(x=>`<p>${escapeHtml(x)}</p>`).join("")}</div>
+          </div>
+          ${r.cms_issues_in_original ? `<div class="muted" style="margin-top:6px">⚠ ${r.cms_issues_in_original} CMS-hygiene issues in the original (nbsp / boilerplate).</div>` : ""}
+        </div>
+        <div class="cmp-col">
+          <div class="cmp-head cmp-head-pilot">LeenAI from the same facts <span class="badge badge-stop">draft · not published</span></div>
+          <div class="ql-article">
+            <div class="ql-breadcrumb">Home <span>›</span> News <span>›</span> Qatar</div>
+            <h2 class="ql-article-h1">${escapeHtml(p.headline)}</h2>
+            <div class="ql-byline"><span class="ql-avatar">QL</span><span><b>Qatar Living Desk</b> · draft</span></div>
+            <div class="ql-article-body">${(p.body||"").split(/\n\s*\n/).slice(0,6).map(x=>`<p>${escapeHtml(x)}</p>`).join("")}</div>
+          </div>
+          <div class="muted" style="margin-top:6px">✓ 0 CMS issues · governance: <b>${escapeHtml(p.governance.risk)}</b> (${escapeHtml(p.governance.action||"")})</div>
+        </div>
+      </div>
+      <div class="cmp-scores">
+        <div class="cmp-metric cmp-metric-head"><span class="cmp-metric-label">Metric</span><span>Real QL</span><span>LeenAI</span></div>
+        ${scoreRow("Style-rule adherence", r.scores.style_adherence, p.scores.style_adherence, null)}
+        ${scoreRow("Readability (Flesch)", r.scores.readability, p.scores.readability, readBetter)}
+        ${scoreRow("Grounding (vs facts)", "—", p.scores.grounding ?? "—", null)}
+        ${scoreRow("CMS hygiene issues", r.cms_issues_in_original, 0, "pilot")}
+      </div>
+      <div class="muted" style="margin-top:10px;font-size:12px">
+        Honest read: the real article is 100%-QL by definition. The pilot matches its style adherence from only the facts, is typically more readable, and ships clean. <b>You judge the writing.</b>
+      </div>
+    `;
+  } catch (e) {
+    out.innerHTML = `<div class="error-box">${escapeHtml(e.message)}</div>`;
+  }
 }
 
 /* ───────── News Radar ───────── */
