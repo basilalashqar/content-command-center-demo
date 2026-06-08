@@ -228,7 +228,6 @@ async function runCompare(id, btn) {
         <span class="cmp-v ${better==='real'?'cmp-win':''}">${a}</span>
         <span class="cmp-v ${better==='pilot'?'cmp-win':''}">${bb}</span>
       </div>`;
-    const readBetter = (p.scores.readability > r.scores.readability) ? "pilot" : "real";
     out.innerHTML = `
       <div class="cmp-grid">
         <div class="cmp-col">
@@ -254,13 +253,15 @@ async function runCompare(id, btn) {
       </div>
       <div class="cmp-scores">
         <div class="cmp-metric cmp-metric-head"><span class="cmp-metric-label">Metric</span><span>Real QL</span><span>LeenAI</span></div>
-        ${scoreRow("Style-rule adherence", r.scores.style_adherence, p.scores.style_adherence, null)}
-        ${scoreRow("Readability (Flesch)", r.scores.readability, p.scores.readability, readBetter)}
-        ${scoreRow("Grounding (vs facts)", "—", p.scores.grounding ?? "—", null)}
+        ${scoreRow("House-style adherence (extracted rules)", r.scores.style_adherence, p.scores.style_adherence, null)}
+        ${scoreRow("Readability (Flesch · higher = easier)", r.scores.readability, p.scores.readability, null)}
+        ${scoreRow("Grounding — facts traceable to source", "n/a", p.scores.grounding ?? "—", "pilot")}
         ${scoreRow("CMS hygiene issues", r.cms_issues_in_original, 0, "pilot")}
       </div>
-      <div class="muted" style="margin-top:10px;font-size:12px">
-        Honest read: the real article is 100%-QL by definition. The pilot matches its style adherence from only the facts, is typically more readable, and ships clean. <b>You judge the writing.</b>
+      <div class="muted" style="margin-top:10px;font-size:12.5px;line-height:1.5">
+        <b>Honest read:</b> the pilot does not replace Qatar Living's editors. It produces a
+        <b>clean, source-faithful first draft from verified facts</b> — grounding 100, no CMS
+        residue, no auto-publish. <b>Editors remain in control.</b>
       </div>
     `;
   } catch (e) {
