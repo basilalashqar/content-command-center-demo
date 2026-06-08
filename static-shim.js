@@ -108,9 +108,15 @@
     const gs = Math.round((.7*eg+.3*ng)*10)/10;
     const risk = gs>=85?"low":gs>=65?"medium":"high";
     const paras = (text||"").split(/\n\s*\n/).filter(p=>p.trim());
+    const arabic = ((text||"").match(/[؀-ۿﭐ-﷿ﹰ-﻿]/g) || []);
+    const lang = { expected_language:"en", mixed: arabic.length>0, wrong_script_chars: arabic.length,
+      offending_snippets: ((text||"").match(/[؀-ۿﭐ-﷿ﹰ-﻿][؀-ۿﭐ-﷿ﹰ-﻿\s]{0,40}/g)||[]).map(s=>s.trim()).slice(0,5),
+      status: arabic.length>0 ? "language_mixing_detected" : "clean",
+      note: arabic.length>0 ? "Language mixing detected: render Arabic names in English." : "No script mixing." };
     return { readability:{flesch_reading_ease:flesch,band,words_per_sentence:Math.round(wps*10)/10,syllables_per_word:Math.round(spw*100)/100},
       factual_grounding:{grounding_score:gs,hallucination_risk:risk,entities_total:ents.length,entities_grounded_pct:eg,ungrounded_entities:ungroundedE.slice(0,10),numbers_total:nums.length,numbers_grounded_pct:ng,ungrounded_numbers:ungroundedN.slice(0,10),method:"grounding_verification",note:"GROUNDING verification, NOT fact-checking."},
-      structure:{paragraphs:paras.length,sentences:sents.length,has_attribution:hits(text,ATTR).length>0,structurally_sound:paras.length>=3,issues:paras.length<3?["Fewer than 3 paragraphs."]:[]} };
+      structure:{paragraphs:paras.length,sentences:sents.length,has_attribution:hits(text,ATTR).length>0,structurally_sound:paras.length>=3,issues:paras.length<3?["Fewer than 3 paragraphs."]:[]},
+      language_consistency: lang };
   }
 
   function cleanup(text) {

@@ -804,7 +804,10 @@ function renderQuality(q) {
   const r = q.readability || {};
   const g = q.factual_grounding || {};
   const st = q.structure || {};
+  const lang = q.language_consistency || {};
   const riskClass = { low: "low", medium: "medium", high: "high" }[g.hallucination_risk] || "low";
+  const langClean = !lang.mixed;
+  const langSnips = (lang.offending_snippets || []).map(s => `<span class="chip">${escapeHtml(s)}</span>`).join("");
   let ungrounded = "";
   if (g.ungrounded_entities?.length || g.ungrounded_numbers?.length) {
     const chips = [...(g.ungrounded_entities||[]), ...(g.ungrounded_numbers||[])]
@@ -832,7 +835,13 @@ function renderQuality(q) {
           <div class="quality-label">Structure</div>
           <div class="quality-note">${st.paragraphs ?? "—"} paras · ${st.has_attribution ? "attributed" : "no attribution"}</div>
         </div>
+        <div class="quality-cell">
+          <div class="quality-num ${langClean ? 'risk-low' : 'risk-high'}">${langClean ? "✓" : "✗"}</div>
+          <div class="quality-label">Language</div>
+          <div class="quality-note">${langClean ? "English only — no script mixing" : `mixing detected (${lang.wrong_script_chars} Arabic chars)`}</div>
+        </div>
       </div>
+      ${!langClean ? `<div class="muted" style="margin-top:6px"><b style="color:var(--high)">Language mixing — fix before publish:</b><div class="chips chips-warn" style="margin-top:6px">${langSnips}</div></div>` : ""}
       ${ungrounded}
       ${(st.issues && st.issues.length) ? `<div class="muted" style="margin-top:6px">Structure notes: ${st.issues.map(escapeHtml).join(" · ")}</div>` : ""}
     </div>
