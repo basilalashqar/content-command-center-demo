@@ -1181,7 +1181,7 @@ tbody tr:hover td { background: #f7fafc; }
 .tour-backdrop { position: fixed; inset: 0; background: transparent; z-index: 200; pointer-events: none; }
 .present-card {
   position: fixed; z-index: 201; left: 50%; transform: translateX(-50%);
-  bottom: 20px; width: 680px; max-width: calc(100vw - 32px); max-height: 52vh;
+  bottom: 20px; width: 700px; max-width: calc(100vw - 32px); max-height: 60vh;
   display: flex; flex-direction: column;
   background: #fff; border: 1px solid var(--rule); border-radius: 14px; padding: 16px 20px 14px;
   box-shadow: 0 24px 70px rgba(0,0,0,.40); border-top: 5px solid var(--orange);
@@ -1191,6 +1191,17 @@ tbody tr:hover td { background: #f7fafc; }
 .present-title { font-family: var(--sans); font-weight: 800; font-size: 17px; color: var(--navy); line-height: 1.25; }
 .present-body { margin-top: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; }
 .present-block p { margin: 2px 0 0; font-size: 13.5px; line-height: 1.5; color: #344054; }
+/* manual → problem → AI arc */
+.present-arc { display: flex; flex-direction: column; gap: 6px; }
+.arc-step { padding: 7px 11px; border-radius: 8px; border-left: 3px solid; }
+.arc-step span { font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+.arc-step p { margin: 2px 0 0; font-size: 12.5px; line-height: 1.45; color: #344054; }
+.arc-manual  { background: #f2f4f7; border-left-color: #98a2b3; }
+.arc-manual span  { color: #475467; }
+.arc-problem { background: #fffaeb; border-left-color: #f79009; }
+.arc-problem span { color: #b54708; }
+.arc-ai      { background: #ecfdf3; border-left-color: #12b76a; }
+.arc-ai span      { color: #027a48; }
 .present-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
 .present-what { color: #667085; }
 .present-do   { color: #0b7a4b; }

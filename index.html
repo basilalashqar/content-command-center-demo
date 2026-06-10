@@ -151,7 +151,7 @@
           <ul class="bullets">
             <li><b>It writes in the Qatar Living voice.</b> The brand model is derived from a study of 1,999 published articles: entity-first headlines, attribution-heavy prose, the institutional stance verbs the newsroom actually uses.</li>
             <li><b>It enforces governance automatically.</b> 46.5% of the analysed content needs senior review; the system routes those items to humans by default and never auto-publishes.</li>
-            <li><b>It cleans CMS residue at publish time.</b> Thousands of stray <code>&amp;nbsp;</code> tokens and ~1,425 repeated boilerplate CTAs were detected across the corpus.</li>
+            <li><b>It tidies copy at publish time.</b> The same boilerplate CTA paragraph was detected in ~1,425 articles, alongside paste artefacts and stray markup that hurt SEO, accessibility and machine-readability.</li>
             <li><b>It surfaces the event-freshness problem on day one.</b> 57.6% of listed events had already ended at study time (80.5% today); the system flags every one with a suggested correction for approval.</li>
           </ul>
         </div>
@@ -286,8 +286,8 @@
             Paste a full news article from any source (wire copy, a press
             release, another outlet). The system <b>re-reports it as an original
             Qatar Living article</b> — reworded, not copied — applying all
-            <b>12 Genuine Issues</b> and the house guidelines: cleans
-            <code>&amp;nbsp;</code>/boilerplate, fixes honorifics, removes
+            <b>12 Genuine Issues</b> and the house guidelines: clears
+            repeated boilerplate, fixes honorifics, removes
             sensational language, adds a local-impact angle, suggests a category
             and byline, and surfaces the key facts. Then it checks how faithful
             the rewrite is to the source.
@@ -296,7 +296,7 @@
 
         <div class="scenario-row">
           <span class="scenario-label">Try a sample:</span>
-          <button class="scenario-btn" id="pp-sample">Messy wire story (with nbsp + hype + boilerplate)</button>
+          <button class="scenario-btn" id="pp-sample">Messy wire story (with hype + boilerplate)</button>
         </div>
 
         <div class="rewrite-grid">
@@ -437,7 +437,7 @@
       <section id="section-cleanup" class="section">
         <div class="section-head">
           <h1>CMS Cleanup Assistant</h1>
-          <p class="section-sub">Paste a messy article body. The cleaner strips <code>&amp;nbsp;</code>, the repeated social-CTA boilerplate, stray HTML, and whitespace noise.</p>
+          <p class="section-sub">Paste a messy article body. The cleaner removes the repeated social-CTA boilerplate, paste artefacts, stray HTML, and whitespace noise (and normalizes <code>&amp;nbsp;</code> markup for SEO/accessibility).</p>
         </div>
         <div class="rewrite-grid">
           <div class="card">
