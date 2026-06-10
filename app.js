@@ -73,6 +73,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   loadSampleImages();
   renderSectionStories();   // audience-facing "today → problem → what it does → benefit" strips
   wireInlineSamples();      // one-click examples on Checker + Governance (press & run live)
+  wireWalk();               // on-screen guided walkthrough (audience-safe)
   await loadOverview();   // first paint
   // Lazy-load others on first nav click; but pre-warm freshness data
   loadFreshness();
@@ -179,6 +180,98 @@ function wireInlineSamples() {
   $("#c-sample")?.addEventListener("click", () => { $("#c-input").value = SAMPLE_CHECKER; });
   $("#gov-sample-high")?.addEventListener("click", () => { $("#gov-input").value = SAMPLE_GOV_HIGH; });
   $("#gov-sample-low")?.addEventListener("click", () => { $("#gov-input").value = SAMPLE_GOV_LOW; });
+}
+
+/* ───────── Guided walkthrough (audience-safe, shown on the demo) ─────────
+   Steps through the workflow showing the SAME plain-language value story already
+   on each screen — Today / Problem / What this does / Benefit. No private coaching
+   here; that lives only at the unlisted notes URL, for the presenter's own screen. */
+const WALK_ORDER = [
+  { section: "overview", sel: ".run-demo-bar", title: "The big picture",
+    intro: [
+      "Your team does a lot of repetitive work by hand — writing, formatting, tagging and cleaning, across the site and social.",
+      "This gets that routine work ready in your voice, then hands it to your editors to approve.",
+      "Nothing publishes on its own — the final call is always theirs.",
+      "Let's walk through it, one piece at a time." ] },
+  { section: "radar",      sel: ".radar-bar",                       title: "Live News Radar" },
+  { section: "generate",   sel: "#section-generate .section-head",  title: "One brief → every format" },
+  { section: "paraphrase", sel: "#section-paraphrase .section-head",title: "Re-report any source, in your voice" },
+  { section: "compare",    sel: "#section-compare .section-head",   title: "Side by side with your real article" },
+  { section: "governance", sel: "#section-governance .section-head",title: "Sensitive content stays controlled" },
+  { section: "freshness",  sel: "#freshness-summary",               title: "Events that stay up to date" },
+  { section: "cleanup",    sel: "#section-cleanup .section-head",    title: "The boring clean-up, in one click" },
+  { section: "checker",    sel: "#section-checker .section-head",    title: "A quick check against your style" },
+  { section: "copilot",    sel: "#section-copilot .section-head",   title: "Editors in control — and it learns" },
+  { section: "roi",        sel: "#section-roi .section-head",        title: "What it gives back" },
+  { section: "overview",   sel: ".run-demo-bar", title: "What we're proposing",
+    intro: [
+      "A short, paid pilot — two to four weeks, with a few of your editors.",
+      "We measure it on real numbers: how often the drafts are accepted, and hours saved.",
+      "You keep full control the whole way — and we build from there." ] },
+];
+let WALK_I = 0;
+
+function wireWalk() {
+  $("#walk-start")?.addEventListener("click", startWalk);
+  $("#walk-next")?.addEventListener("click", () => { WALK_I++; renderWalkStep(); });
+  $("#walk-back")?.addEventListener("click", () => { if (WALK_I > 0) { WALK_I--; renderWalkStep(); } });
+  $("#walk-end")?.addEventListener("click", endWalk);
+  $("#walk-min")?.addEventListener("click", minWalk);
+  $("#walk-mini")?.addEventListener("click", resumeWalk);
+  document.addEventListener("keydown", (e) => {
+    const w = $("#walk");
+    if (!w || w.classList.contains("walk-hidden") || w.classList.contains("walk-min")) return;
+    if (e.key === "ArrowRight") { WALK_I++; renderWalkStep(); }
+    else if (e.key === "ArrowLeft") { if (WALK_I > 0) { WALK_I--; renderWalkStep(); } }
+    else if (e.key === "Escape") { minWalk(); }
+  });
+}
+function startWalk() {
+  WALK_I = 0;
+  document.body.classList.add("walk-active");
+  $("#walk").classList.remove("walk-hidden", "walk-min");
+  renderWalkStep();
+}
+function endWalk() {
+  $("#walk").classList.add("walk-hidden");
+  $("#walk").classList.remove("walk-min");
+  document.body.classList.remove("walk-active");
+  clearWalkSpot();
+}
+function minWalk() {
+  $("#walk-mini-step").textContent = `${WALK_I + 1}/${WALK_ORDER.length}`;
+  $("#walk").classList.add("walk-min");
+  clearWalkSpot();
+}
+function resumeWalk() { $("#walk").classList.remove("walk-min"); renderWalkStep(); }
+function clearWalkSpot() { document.querySelectorAll(".tour-spot").forEach(e => e.classList.remove("tour-spot")); }
+
+function renderWalkStep() {
+  clearWalkSpot();
+  if (WALK_I < 0) WALK_I = 0;
+  if (WALK_I >= WALK_ORDER.length) { endWalk(); return; }
+  const my = WALK_I, s = WALK_ORDER[WALK_I];
+  const navBtn = document.querySelector(`.nav-item[data-section="${s.section}"]`);
+  if (navBtn) navBtn.click();
+  setTimeout(() => {
+    if (my !== WALK_I) return;
+    clearWalkSpot();
+    const el = document.querySelector(s.sel);
+    if (el) { el.classList.add("tour-spot"); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
+    $("#walk-prog").textContent = `Step ${WALK_I + 1} / ${WALK_ORDER.length}`;
+    $("#walk-title").textContent = s.title;
+    let body;
+    if (s.intro) {
+      body = `<ul class="walk-points">${s.intro.map(p => `<li>${p}</li>`).join("")}</ul>`;
+    } else {
+      const st = SECTION_STORY[s.section] || {};
+      body = `<div class="walk-grid">${STORY_CELLS.filter(([k]) => st[k]).map(([k, label, cls]) =>
+        `<div class="story-cell ${cls}"><div class="story-label">${label}</div><div class="story-text">${st[k]}</div></div>`).join("")}</div>`;
+    }
+    $("#walk-body").innerHTML = body;
+    $("#walk-back").style.visibility = (WALK_I === 0) ? "hidden" : "visible";
+    $("#walk-next").textContent = (WALK_I === WALK_ORDER.length - 1) ? "Finish ✓" : "Next →";
+  }, 360);
 }
 
 function renderSectionStories() {

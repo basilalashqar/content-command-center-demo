@@ -1243,6 +1243,46 @@ tbody tr:hover td { background: #f7fafc; }
 .story-text { font-size: 13px; line-height: 1.5; color: #344054; }
 @media (max-width: 1100px) { .story-strip { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 620px)  { .story-strip { grid-template-columns: 1fr; } }
+
+/* ── Guided walkthrough panel (audience-safe) ── */
+#walk.walk-hidden { display: none; }
+.walk-card {
+  position: fixed; z-index: 240; left: 50%; transform: translateX(-50%); bottom: 18px;
+  width: 780px; max-width: calc(100vw - 28px); max-height: 60vh;
+  display: flex; flex-direction: column;
+  background: #fff; border: 1px solid var(--rule); border-radius: 14px; padding: 14px 18px 12px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.40); border-top: 5px solid var(--orange);
+}
+.walk-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.walk-head-text { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; flex: 1; }
+.walk-prog { font-size: 11px; font-weight: 800; color: var(--orange); white-space: nowrap; }
+.walk-title { font-family: var(--sans); font-weight: 800; font-size: 19px; color: var(--navy); line-height: 1.2; }
+.walk-min { flex: none; background: transparent; border: none; color: #98a2b3; cursor: pointer;
+  font-size: 16px; line-height: 1; padding: 2px 7px; border-radius: 6px; transition: all .15s; }
+.walk-min:hover { background: #f2f4f7; color: #344054; }
+.walk-body { margin-top: 12px; overflow-y: auto; }
+.walk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.walk-grid .story-text { font-size: 13.5px; }
+.walk-points { margin: 2px 0 0; padding-left: 22px; }
+.walk-points li { font-size: 15.5px; line-height: 1.55; color: #344054; margin-bottom: 8px; }
+.walk-actions { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.walk-spacer { flex: 1; }
+.walk-mini {
+  display: none; position: fixed; z-index: 240; right: 20px; bottom: 20px;
+  align-items: center; gap: 6px; cursor: pointer;
+  background: var(--navy); color: #fff; border: none; border-left: 4px solid var(--orange);
+  font-family: var(--sans); font-weight: 700; font-size: 13px; padding: 11px 16px;
+  border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,.35);
+}
+.walk-mini:hover { filter: brightness(1.08); }
+#walk-mini-step { color: var(--orange); }
+#walk.walk-min .walk-card { display: none; }
+#walk.walk-min .walk-mini { display: inline-flex; }
+body.walk-active .story-strip { display: none; }  /* avoid duplicating the cards while the panel shows them */
+@media (max-width: 980px) {
+  .walk-card { left: 8px; right: 8px; bottom: 8px; transform: none; width: auto; max-width: none; max-height: 66vh; }
+  .walk-grid { grid-template-columns: 1fr; }
+}
 .present-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
 .present-what { color: #667085; }
 .present-do   { color: #0b7a4b; }

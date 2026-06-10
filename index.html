@@ -131,10 +131,11 @@
         <!-- Try-it entry -->
         <div class="run-demo-bar">
           <div>
-            <div class="run-demo-title">Try it live</div>
-            <div class="run-demo-sub">Every screen comes with a ready example — just press a button and watch it work. Or jump straight to a part of the workflow.</div>
+            <div class="run-demo-title">See it work</div>
+            <div class="run-demo-sub">Take the guided walkthrough, or jump straight to a part of the workflow. Every screen has a ready example you can press and run.</div>
           </div>
           <div class="run-demo-actions">
+            <button class="btn-primary" id="walk-start">▶ Guided walkthrough</button>
             <button class="btn-secondary" data-jump="radar">Live News Radar</button>
             <button class="btn-secondary" data-demo="sensitive">⚑ Sensitive News (High-risk)</button>
             <button class="btn-secondary" data-jump="freshness">Event freshness</button>
@@ -620,6 +621,27 @@
       </section>
 
     </main>
+  </div>
+
+  <!-- Guided walkthrough (audience-safe: shows the value story, never private notes) -->
+  <div id="walk" class="walk-hidden">
+    <div class="walk-card" id="walk-card">
+      <div class="walk-head">
+        <div class="walk-head-text">
+          <span class="walk-prog" id="walk-prog"></span>
+          <span class="walk-title" id="walk-title"></span>
+        </div>
+        <button class="walk-min" id="walk-min" title="Minimize to the corner (keeps your place)">▁</button>
+      </div>
+      <div class="walk-body" id="walk-body"></div>
+      <div class="walk-actions">
+        <button class="btn-secondary" id="walk-end">End</button>
+        <span class="walk-spacer"></span>
+        <button class="btn-secondary" id="walk-back">← Back</button>
+        <button class="btn-primary" id="walk-next">Next →</button>
+      </div>
+    </div>
+    <button class="walk-mini" id="walk-mini">▶ Walkthrough · <span id="walk-mini-step"></span> · tap to resume</button>
   </div>
 
   <script src="./static-shim.js"></script>
