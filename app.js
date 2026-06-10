@@ -235,17 +235,34 @@ function wireTour() {
   $("#tour-next")?.addEventListener("click", () => { TOUR_I++; renderTourStep(); });
   $("#tour-back")?.addEventListener("click", () => { if (TOUR_I > 0) { TOUR_I--; renderTourStep(); } });
   $("#tour-skip")?.addEventListener("click", endTour);
+  $("#tour-min")?.addEventListener("click", minimizeTour);
+  $("#tour-mini")?.addEventListener("click", restoreTour);
   document.addEventListener("keydown", (e) => {
-    if ($("#tour").classList.contains("tour-hidden")) return;
+    const tour = $("#tour");
+    if (tour.classList.contains("tour-hidden") || tour.classList.contains("present-min")) return;
     if (e.key === "ArrowRight") { TOUR_I++; renderTourStep(); }
     else if (e.key === "ArrowLeft") { if (TOUR_I > 0) { TOUR_I--; renderTourStep(); } }
-    else if (e.key === "Escape") { endTour(); }
+    else if (e.key === "Escape") { minimizeTour(); }   // Esc tucks it away (resumable), doesn't end
   });
 }
-function startTour() { TOUR_I = 0; $("#tour").classList.remove("tour-hidden"); renderTourStep(); }
+function startTour() {
+  TOUR_I = 0;
+  $("#tour").classList.remove("tour-hidden", "present-min");
+  renderTourStep();
+}
 function endTour() {
+  $("#tour").classList.remove("present-min");
   $("#tour").classList.add("tour-hidden");
   document.querySelectorAll(".tour-spot").forEach(e => e.classList.remove("tour-spot"));
+}
+function minimizeTour() {
+  $("#tour-mini-step").textContent = `${TOUR_I + 1}/${TOUR_STEPS.length}`;
+  $("#tour").classList.add("present-min");
+  document.querySelectorAll(".tour-spot").forEach(e => e.classList.remove("tour-spot"));
+}
+function restoreTour() {
+  $("#tour").classList.remove("present-min");
+  renderTourStep();   // re-navigates, re-spotlights, repaints the panel at the same step
 }
 function renderTourStep() {
   document.querySelectorAll(".tour-spot").forEach(e => e.classList.remove("tour-spot"));

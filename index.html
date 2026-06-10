@@ -621,18 +621,23 @@
     <div class="tour-backdrop"></div>
     <div class="tour-card present-card" id="tour-card">
       <div class="present-head">
-        <span class="present-progress" id="tour-step"></span>
-        <span class="present-title" id="tour-title"></span>
+        <div class="present-head-text">
+          <span class="present-progress" id="tour-step"></span>
+          <span class="present-title" id="tour-title"></span>
+        </div>
+        <button class="present-min" id="tour-min" title="Minimize to corner (keeps your place)">✕</button>
       </div>
       <div class="present-body" id="tour-body"></div>
       <div class="tour-actions">
-        <button class="btn-secondary" id="tour-skip">✕ End</button>
+        <button class="btn-secondary" id="tour-skip">End</button>
         <span class="present-spacer"></span>
         <button class="btn-secondary" id="tour-back">← Back</button>
         <button class="btn-primary" id="tour-next">Next →</button>
       </div>
-      <div class="present-hint">← → arrow keys to navigate · Esc to end · the dashboard stays clickable, so demo live as you go</div>
+      <div class="present-hint">← → keys to move · ✕ or Esc tucks it into the corner (resumable) · End closes it · dashboard stays clickable</div>
     </div>
+    <!-- minimized chip (click to bring the walkthrough back) -->
+    <button class="tour-mini" id="tour-mini">🎤 Walkthrough · <span id="tour-mini-step"></span> · tap to resume ▸</button>
   </div>
 
   <script src="./static-shim.js"></script>

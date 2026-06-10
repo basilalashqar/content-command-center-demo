@@ -1186,7 +1186,25 @@ tbody tr:hover td { background: #f7fafc; }
   background: #fff; border: 1px solid var(--rule); border-radius: 14px; padding: 16px 20px 14px;
   box-shadow: 0 24px 70px rgba(0,0,0,.40); border-top: 5px solid var(--orange);
 }
-.present-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.present-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.present-head-text { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; flex: 1; }
+.present-min {
+  flex: none; background: transparent; border: none; color: #98a2b3; cursor: pointer;
+  font-size: 15px; line-height: 1; padding: 3px 6px; border-radius: 6px; transition: all .15s;
+}
+.present-min:hover { background: #f2f4f7; color: #344054; }
+/* minimized corner chip */
+.tour-mini {
+  display: none; position: fixed; z-index: 201; right: 20px; bottom: 20px;
+  align-items: center; gap: 6px; cursor: pointer;
+  background: var(--navy); color: #fff; border: none; border-left: 4px solid var(--orange);
+  font-family: var(--sans); font-weight: 700; font-size: 13px; padding: 11px 16px;
+  border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,.35);
+}
+.tour-mini:hover { filter: brightness(1.08); }
+#tour-mini-step { color: var(--orange); }
+#tour.present-min .present-card { display: none; }
+#tour.present-min .tour-mini { display: inline-flex; }
 .present-progress { font-size: 11px; font-weight: 800; color: var(--orange); white-space: nowrap; }
 .present-title { font-family: var(--sans); font-weight: 800; font-size: 17px; color: var(--navy); line-height: 1.25; }
 .present-body { margin-top: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; }
