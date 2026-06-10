@@ -132,10 +132,10 @@
         <div class="run-demo-bar">
           <div>
             <div class="run-demo-title">Run the demo</div>
-            <div class="run-demo-sub">Start the guided <strong>Presenter Walkthrough</strong> (17 steps, with talking points), or jump straight to a scenario.</div>
+            <div class="run-demo-sub">Opens your private <strong>Presenter Notes</strong> in a separate window (17 steps + talking points). Keep it on your own screen — share only this tab. Or jump straight to a scenario.</div>
           </div>
           <div class="run-demo-actions">
-            <button class="btn-primary" id="tour-start">🎤 Presenter walkthrough</button>
+            <button class="btn-primary" id="tour-start">🎤 Open presenter notes (separate window)</button>
             <button class="btn-secondary" data-jump="radar">Live News Radar</button>
             <button class="btn-secondary" data-demo="sensitive">⚑ Sensitive News (High-risk)</button>
             <button class="btn-secondary" data-jump="freshness">Event freshness</button>
@@ -614,30 +614,6 @@
       </section>
 
     </main>
-  </div>
-
-  <!-- Presenter walkthrough overlay (docked, non-blocking) -->
-  <div id="tour" class="tour-hidden">
-    <div class="tour-backdrop"></div>
-    <div class="tour-card present-card" id="tour-card">
-      <div class="present-head">
-        <div class="present-head-text">
-          <span class="present-progress" id="tour-step"></span>
-          <span class="present-title" id="tour-title"></span>
-        </div>
-        <button class="present-min" id="tour-min" title="Minimize to corner (keeps your place)">✕</button>
-      </div>
-      <div class="present-body" id="tour-body"></div>
-      <div class="tour-actions">
-        <button class="btn-secondary" id="tour-skip">End</button>
-        <span class="present-spacer"></span>
-        <button class="btn-secondary" id="tour-back">← Back</button>
-        <button class="btn-primary" id="tour-next">Next →</button>
-      </div>
-      <div class="present-hint">← → keys to move · ✕ or Esc tucks it into the corner (resumable) · End closes it · dashboard stays clickable</div>
-    </div>
-    <!-- minimized chip (click to bring the walkthrough back) -->
-    <button class="tour-mini" id="tour-mini">🎤 Walkthrough · <span id="tour-mini-step"></span> · tap to resume ▸</button>
   </div>
 
   <script src="./static-shim.js"></script>
