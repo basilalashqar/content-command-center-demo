@@ -77,38 +77,142 @@ window.addEventListener("DOMContentLoaded", async () => {
   loadFreshness();
 });
 
-/* ───────── Guided tour ───────── */
+/* ───────── Presenter walkthrough ─────────
+   A docked, step-by-step pitch guide. Each step navigates to a section and
+   shows: what it is · the exact line to say · what to click · what to watch.
+   The dashboard stays clickable so you can demo live while reading the script. */
 const TOUR_STEPS = [
-  { section: "overview", sel: '.pipeline-strip',
-    title: "A content operating workflow",
-    text: "This is the Qatar Living AI Content Command Center — a controlled newsroom workflow for Events, News & Social. AI prepares the work; humans approve every decision. Nothing auto-publishes." },
-  { section: "radar", sel: '.radar-bar',
-    title: "1 · Radar — it scrapes real Qatar news",
-    text: "The pilot continuously pulls live news from QNA, The Peninsula, Gulf Times and more, and classifies each item for governance risk — refreshing on its own every ~12 minutes." },
-  { section: "radar", sel: '#radar-auto',
-    title: "2 · Auto-prepare",
-    text: "One click re-reports the top stories in Qatar Living's tone — applying the 12 Genuine Issues — and drops them into the approval queue. The desk wakes up to drafts already prepared." },
-  { section: "paraphrase", sel: '#section-paraphrase .section-head',
-    title: "3 · Paraphrase any source",
-    text: "Paste a full article from any outlet. It is re-reported as an original Qatar Living piece — reworded, not copied — with nbsp/boilerplate cleaned, honorifics fixed, and a faithfulness check." },
-  { section: "governance", sel: '#section-governance .section-head',
-    title: "4 · Governance gate",
-    text: "Every item is risk-classified. Anything touching royals, ministries, diplomacy, security or religion is routed to senior + legal review and marked No-auto-publish." },
-  { section: "copilot", sel: '#section-copilot .section-head',
-    title: "5 · Human approval + learning",
-    text: "Editors approve, edit, or reject with a reason. Those reasons feed a learning loop that tightens the prompts over time — the system improves with use." },
-  { section: "freshness", sel: '#freshness-summary',
-    title: "6 · Event freshness",
-    text: "57.6% of Qatar Living's listed events had already ended at study time (80.5% today). The freshness agent flags each one with a suggested correction for approval." },
-  { section: "operating", sel: '#op-table',
-    title: "7 · Operating model + audit",
-    text: "Every workflow stage has an owner, a KPI, and a control — with a full audit trail. This is what makes it an operating layer, not a toy." },
+  { section: "overview", sel: ".run-demo-bar",
+    title: "Open — frame it before you click anything",
+    what: "The whole pitch in one sentence. Say this FIRST, with the room's editors in mind.",
+    say: "Before I show anything: this is built to make your editors faster and keep them in control — not to replace them. Nothing here publishes on its own; an editor approves every single item.",
+    click: "Don't click yet. Say the line, pause, then begin.",
+    watch: "This is the most important sentence of the meeting. Say it slowly and make eye contact with the writers, not just the bosses." },
+
+  { section: "overview", sel: "#stat-grid",
+    title: "1 · We studied YOUR content",
+    what: "Live statistics from Qatar Living's real corpus — the credibility foundation.",
+    say: "We didn't mock this up. We studied 1,999 of your own articles and 118 events. Everything you'll see is built on your voice — not generic AI.",
+    click: "Point across the stat cards.",
+    watch: "Lead with their content, not AI features. This is why you've earned the right to show AI to skeptics." },
+
+  { section: "evidence", sel: "#section-evidence .section-head",
+    title: "2 · The evidence — issues in their own content",
+    what: "The 12 Genuine Issues, top openers, stance verbs and avoidance terms — all found in their corpus.",
+    say: "These aren't our opinions — they're patterns in your published content: 57.6% of events already ended, every article tagged just 'News', and 'nbsp' is your single most common token.",
+    click: "Scroll the evidence lists so they see real examples.",
+    watch: "You're diagnosing, not criticising. Frame it as 'we did your homework.'" },
+
+  { section: "radar", sel: ".radar-bar",
+    title: "3 · Live News Radar (the wow moment)",
+    what: "Continuously pulls real Qatar news and risk-classifies each item.",
+    say: "This is live — real Qatar news right now from QNA, The Peninsula and Gulf Times. It refreshes itself every twelve minutes.",
+    click: "Point at the live items and the 'last updated' timestamp. Let 'live' land.",
+    watch: "The word 'live' matters — make sure they register this isn't a slideshow." },
+
+  { section: "radar", sel: "#radar-auto",
+    title: "4 · Auto-prepare → the queue",
+    what: "One click re-reports the top stories in QL tone and drops them into the approval queue.",
+    say: "One click and the desk wakes up to drafts already prepared — prepared, not published. An editor still approves each one.",
+    click: "Click 'Auto-prepare top 3' (or 'Prepare in QL style' on one item).",
+    watch: "Every time you say 'prepared', say 'an editor approves'. Reinforce control on every screen." },
+
+  { section: "compare", sel: "#section-compare .section-head",
+    title: "5 · Compare to Real ★ (the honesty screen)",
+    what: "Their real published article vs the pilot's version from the same facts, side by side.",
+    say: "Left is your actual published article. Right is ours from the same facts. The score measures adherence to your style rules — not whether ours is 'better than Qatar Living'. You judge.",
+    click: "Open one sample (aviation works well) and let them read both columns.",
+    watch: "Do NOT claim it beats them. Skeptics relax the instant you stop overclaiming. This screen wins the room." },
+
+  { section: "paraphrase", sel: "#section-paraphrase .section-head",
+    title: "6 · Paraphrase any source",
+    what: "Paste any outlet's article → re-reported in QL tone, reworded not copied, boilerplate cleaned.",
+    say: "Paste anything. It re-reports it as an original Qatar Living piece — facts and quotes preserved, wording fresh, footer junk stripped — with a faithfulness check.",
+    click: "Paste a wire story, run it, show the copy buttons.",
+    watch: "Say 'reworded, not copied' out loud — it actively checks overlap so it can't just clone the source." },
+
+  { section: "generate", sel: "#section-generate .section-head",
+    title: "7 · Generate + catch it failing (the trust move)",
+    what: "One brief → a full package: article + Instagram + push + story. Then prove it's honest.",
+    say: "From one brief: a full article plus Instagram, push and story, all in your voice. Now watch — I'll feed it a 'fact' that isn't in the brief… see, the grounding check flags it in red. It tells you when it's unsure. It doesn't pretend.",
+    click: "Generate normally first. Then add an unsupported 'fact' and show the grounding score drop + the flag.",
+    watch: "This single moment converts AI skeptics more than any feature. A tool that admits fault is trusted." },
+
+  { section: "checker", sel: "#section-checker .section-head",
+    title: "8 · Style Checker (honestly named)",
+    what: "0–100 adherence to the extracted house-style rules, across 7 dimensions.",
+    say: "This measures adherence to YOUR rules — we renamed it from 'quality' on purpose, because you were right that calling it 'quality' overclaimed.",
+    click: "Paste text and show the 7-dimension breakdown.",
+    watch: "Naming this honestly directly answers Anis's number-one past objection — call that out." },
+
+  { section: "governance", sel: "#section-governance .section-head",
+    title: "9 · Governance gate (control = trust)",
+    what: "18-label risk taxonomy → reviewer level + action. Sensitive content never auto-publishes.",
+    say: "Anything touching royals, ministries, diplomacy, security or religion is routed to senior plus legal review and marked no-auto-publish. Control is built in, not bolted on.",
+    click: "Click the Sensitive-News one-click demo; show the high-risk routing.",
+    watch: "For skeptics, lead with control. This is the screen that says 'you're safe.'" },
+
+  { section: "freshness", sel: "#freshness-summary",
+    title: "10 · Event freshness (an easy yes)",
+    what: "Detects stale events and proposes a correction for approval.",
+    say: "57.6% of your listed events had already ended — 80.5% today. It flags each one with a fix for approval. That's hours of admin nobody enjoys, gone.",
+    click: "Show the stale list and a suggested action.",
+    watch: "A low-trust, high-drudgery win — the easy 'yes' to start a pilot on." },
+
+  { section: "cleanup", sel: "#section-cleanup .section-head",
+    title: "11 · CMS Cleanup (the foot in the door)",
+    what: "Strips nbsp, social boilerplate, stray HTML and paste artefacts instantly.",
+    say: "The boring stuff your editors hate — nbsp, footer boilerplate, paste junk — cleaned in a click. No creativity required, no trust required.",
+    click: "Paste a dirty body, run cleanup, show the before/after counts.",
+    watch: "This is your wedge use-case. Start here, earn trust, then move to drafting." },
+
+  { section: "copilot", sel: "#section-copilot .section-head",
+    title: "12 · Editorial Copilot (your editors train it)",
+    what: "Review queue: approve / edit-and-approve / reject-with-reason → a learning loop.",
+    say: "Every edit your editors make trains it. They're not being automated — they become the editors-in-chief of an assistant that learns their house style. Acceptance rate is the KPI.",
+    click: "Approve one, edit one, reject one with a reason; show the learning panel.",
+    watch: "This one screen answers BOTH 'how does it improve?' and the job-fear. Linger here." },
+
+  { section: "cms", sel: "#section-cms .section-head",
+    title: "13 · CMS Integration (an honest mock)",
+    what: "A clearly-labelled mock connector showing the integration contract.",
+    say: "This is labelled a mock — we're not pretending it's live. It shows the contract: read-only pull of opportunities, draft-only push. A human always publishes.",
+    click: "Show pull opportunities and push-draft (note 'draft only, never publish').",
+    watch: "Honesty about 'mock' builds more trust than a faked live integration ever would." },
+
+  { section: "roi", sel: "#section-roi .section-head",
+    title: "14 · ROI — say HOURS BACK, never FTE",
+    what: "Configurable savings. Lead with hours-per-editor; bury the annual aggregate.",
+    say: "Roughly three to four hours back per editor every week — to spend on reporting and judgment instead of cleanup and reformatting. Same team, more output, more formats.",
+    click: "Show the default scenario. Read the per-editor hours, not the headcount figure.",
+    watch: "NEVER say 'FTE freed' or 'headcount' in this room — to 18 editors that reads as layoffs. Hours-back, always." },
+
+  { section: "operating", sel: "#op-table",
+    title: "15 · Operating model + audit",
+    what: "Owner + KPI + control for every stage, with a full audit trail.",
+    say: "Every stage has an owner, a KPI and a control, with a complete audit trail. This is an operating layer, not a toy.",
+    click: "Show the table and the audit log.",
+    watch: "Signals you've thought about accountability and governance, not just generation." },
+
+  { section: "overview", sel: ".run-demo-bar",
+    title: "Close — land on the ask",
+    what: "Where to stop and hand it to discussion.",
+    say: "v1.1 proves the opportunity on your real content. The ask: a two-to-four-week paid pilot with two or three of your editors and read-only CMS access — measured on acceptance rate and hours saved. Phase 2 builds the moat: true multi-agent, real CMS, Arabic generation, and an editorial memory only you will have.",
+    click: "Stop here. Hand it to the room.",
+    watch: "End on the ask and Phase 2 — not 'what do you think?'. Give them a concrete next step." },
 ];
 let TOUR_I = 0;
 function wireTour() {
   $("#tour-start")?.addEventListener("click", () => startTour());
   $("#tour-next")?.addEventListener("click", () => { TOUR_I++; renderTourStep(); });
+  $("#tour-back")?.addEventListener("click", () => { if (TOUR_I > 0) { TOUR_I--; renderTourStep(); } });
   $("#tour-skip")?.addEventListener("click", endTour);
+  document.addEventListener("keydown", (e) => {
+    if ($("#tour").classList.contains("tour-hidden")) return;
+    if (e.key === "ArrowRight") { TOUR_I++; renderTourStep(); }
+    else if (e.key === "ArrowLeft") { if (TOUR_I > 0) { TOUR_I--; renderTourStep(); } }
+    else if (e.key === "Escape") { endTour(); }
+  });
 }
 function startTour() { TOUR_I = 0; $("#tour").classList.remove("tour-hidden"); renderTourStep(); }
 function endTour() {
@@ -117,18 +221,29 @@ function endTour() {
 }
 function renderTourStep() {
   document.querySelectorAll(".tour-spot").forEach(e => e.classList.remove("tour-spot"));
+  if (TOUR_I < 0) TOUR_I = 0;
   if (TOUR_I >= TOUR_STEPS.length) { endTour(); return; }
+  const myStep = TOUR_I;                 // guard against stale timeouts on rapid clicks
   const s = TOUR_STEPS[TOUR_I];
   const navBtn = document.querySelector(`.nav-item[data-section="${s.section}"]`);
   if (navBtn) navBtn.click();
   setTimeout(() => {
+    if (myStep !== TOUR_I) return;       // a newer step superseded this one
+    document.querySelectorAll(".tour-spot").forEach(e => e.classList.remove("tour-spot"));
     const el = document.querySelector(s.sel);
     if (el) { el.classList.add("tour-spot"); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
-    $("#tour-step").textContent = `Step ${TOUR_I + 1} of ${TOUR_STEPS.length}`;
+    $("#tour-step").textContent = `Step ${TOUR_I + 1} / ${TOUR_STEPS.length}`;
     $("#tour-title").textContent = s.title;
-    $("#tour-text").textContent = s.text;
+    const blocks = [
+      s.what  ? `<div class="present-block"><span class="present-label present-what">What it is</span><p>${s.what}</p></div>` : "",
+      s.say   ? `<div class="present-block present-say-block"><span class="present-label present-say">🎙 Say this</span><p>“${s.say}”</p></div>` : "",
+      s.click ? `<div class="present-block"><span class="present-label present-do">Do</span><p>${s.click}</p></div>` : "",
+      s.watch ? `<div class="present-block present-watch-block"><span class="present-label present-watch">⚠ Watch</span><p>${s.watch}</p></div>` : "",
+    ].join("");
+    $("#tour-body").innerHTML = blocks;
+    $("#tour-back").style.visibility = (TOUR_I === 0) ? "hidden" : "visible";
     $("#tour-next").textContent = (TOUR_I === TOUR_STEPS.length - 1) ? "Finish ✓" : "Next →";
-  }, 350);
+  }, 360);
 }
 
 /* Real Qatar Living hero images (from the scraped corpus) */

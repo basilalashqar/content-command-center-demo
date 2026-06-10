@@ -1177,20 +1177,42 @@ tbody tr:hover td { background: #f7fafc; }
 
 /* ════════════════ Guided tour ════════════════ */
 #tour.tour-hidden { display: none; }
-.tour-backdrop { position: fixed; inset: 0; background: transparent; z-index: 200; }
-.tour-card {
-  position: fixed; z-index: 201; right: 36px; bottom: 36px; width: 380px; max-width: calc(100vw - 40px);
-  background: #fff; border: 1px solid var(--rule); border-radius: 12px; padding: 20px 22px;
-  box-shadow: 0 24px 60px rgba(0,0,0,.35); border-top: 4px solid var(--orange);
+/* non-blocking: the dashboard stays fully clickable during the walkthrough */
+.tour-backdrop { position: fixed; inset: 0; background: transparent; z-index: 200; pointer-events: none; }
+.present-card {
+  position: fixed; z-index: 201; left: 50%; transform: translateX(-50%);
+  bottom: 20px; width: 680px; max-width: calc(100vw - 32px); max-height: 52vh;
+  display: flex; flex-direction: column;
+  background: #fff; border: 1px solid var(--rule); border-radius: 14px; padding: 16px 20px 14px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.40); border-top: 5px solid var(--orange);
 }
-.tour-step { font-size: 11px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: .06em; }
-.tour-title { font-family: var(--sans); font-weight: 800; font-size: 18px; color: var(--navy); margin: 4px 0 8px; }
-.tour-text { font-size: 13.5px; line-height: 1.55; color: #344054; }
-.tour-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.present-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.present-progress { font-size: 11px; font-weight: 800; color: var(--orange); white-space: nowrap; }
+.present-title { font-family: var(--sans); font-weight: 800; font-size: 17px; color: var(--navy); line-height: 1.25; }
+.present-body { margin-top: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; }
+.present-block p { margin: 2px 0 0; font-size: 13.5px; line-height: 1.5; color: #344054; }
+.present-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.present-what { color: #667085; }
+.present-do   { color: #0b7a4b; }
+.present-say  { color: var(--orange); }
+.present-watch{ color: #b54708; }
+.present-say-block {
+  background: #fff7f0; border-left: 3px solid var(--orange);
+  border-radius: 0 8px 8px 0; padding: 8px 12px;
+}
+.present-say-block p { font-size: 15px; font-weight: 600; color: var(--navy); line-height: 1.5; }
+.present-watch-block {
+  background: #fffaeb; border-left: 3px solid #f79009;
+  border-radius: 0 8px 8px 0; padding: 7px 12px;
+}
+.present-watch-block p { color: #93370d; font-size: 12.5px; }
+.tour-actions { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.present-spacer { flex: 1; }
+.present-hint { margin-top: 8px; font-size: 10.5px; color: #98a2b3; text-align: center; }
 .tour-spot {
   position: relative; z-index: 201;
-  outline: 3px solid var(--orange); outline-offset: 4px; border-radius: 6px;
-  box-shadow: 0 0 0 9999px rgba(11,20,38,.45); transition: outline .2s;
+  outline: 3px solid var(--orange); outline-offset: 3px; border-radius: 8px;
+  box-shadow: 0 0 0 4px rgba(255,127,56,.18); transition: outline .2s;
 }
 
 /* ════════════════ Responsive (tablet / laptop / phone) ════════════════ */
@@ -1213,7 +1235,7 @@ tbody tr:hover td { background: #f7fafc; }
   .ql-search { order: 3; max-width: 100%; flex-basis: 100%; }
   .console-banner { flex-direction: column; align-items: flex-start; gap: 8px; }
   .section-head h1 { font-size: 24px; }
-  .tour-card { right: 12px; left: 12px; bottom: 12px; width: auto; }
+  .present-card { left: 8px; right: 8px; bottom: 8px; width: auto; max-width: none; transform: none; max-height: 60vh; }
   .radar-grid { grid-template-columns: 1fr; }
   table { font-size: 12px; }
   .gov-row { grid-template-columns: 130px 1fr; }
