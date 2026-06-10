@@ -1220,6 +1220,29 @@ tbody tr:hover td { background: #f7fafc; }
 .arc-problem span { color: #b54708; }
 .arc-ai      { background: #ecfdf3; border-left-color: #12b76a; }
 .arc-ai span      { color: #027a48; }
+
+/* ── Audience-facing story strip (shown on the demo: today → problem → does → benefit) ── */
+.story-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 0 20px;
+}
+.story-cell {
+  background: #fff; border: 1px solid var(--rule); border-top: 3px solid #98a2b3;
+  border-radius: 10px; padding: 12px 14px;
+}
+.story-cell.st-today   { border-top-color: #98a2b3; }
+.story-cell.st-problem { border-top-color: #f79009; }
+.story-cell.st-does    { border-top-color: #2e90fa; }
+.story-cell.st-benefit { border-top-color: #12b76a; }
+.story-label {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em;
+  color: #475467; margin-bottom: 5px;
+}
+.story-cell.st-problem .story-label { color: #b54708; }
+.story-cell.st-does    .story-label { color: #1849a9; }
+.story-cell.st-benefit .story-label { color: #027a48; }
+.story-text { font-size: 13px; line-height: 1.5; color: #344054; }
+@media (max-width: 1100px) { .story-strip { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px)  { .story-strip { grid-template-columns: 1fr; } }
 .present-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
 .present-what { color: #667085; }
 .present-do   { color: #0b7a4b; }

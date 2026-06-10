@@ -128,14 +128,13 @@
           <span class="pipe">Learn</span>
         </div>
 
-        <!-- Run demo entry -->
+        <!-- Try-it entry -->
         <div class="run-demo-bar">
           <div>
-            <div class="run-demo-title">Run the demo</div>
-            <div class="run-demo-sub">Opens your private <strong>Presenter Notes</strong> in a separate window (17 steps + talking points). Keep it on your own screen — share only this tab. Or jump straight to a scenario.</div>
+            <div class="run-demo-title">Try it live</div>
+            <div class="run-demo-sub">Every screen comes with a ready example — just press a button and watch it work. Or jump straight to a part of the workflow.</div>
           </div>
           <div class="run-demo-actions">
-            <button class="btn-primary" id="tour-start">🎤 Open presenter notes (separate window)</button>
             <button class="btn-secondary" data-jump="radar">Live News Radar</button>
             <button class="btn-secondary" data-demo="sensitive">⚑ Sensitive News (High-risk)</button>
             <button class="btn-secondary" data-jump="freshness">Event freshness</button>
@@ -372,6 +371,9 @@
         <div class="rewrite-grid">
           <div class="card">
             <h3>Draft</h3>
+            <div class="scenario-row"><span class="scenario-label">Try a sample:</span>
+              <button class="scenario-btn" id="c-sample">Load a sample article</button>
+            </div>
             <textarea id="c-input" rows="14" placeholder="First line is treated as the headline. Following lines are the body."></textarea>
             <div class="row" style="margin-top:14px;gap:14px">
               <label class="field" style="flex:0 0 auto">
@@ -400,6 +402,10 @@
         <div class="rewrite-grid">
           <div class="card">
             <h3>Draft</h3>
+            <div class="scenario-row"><span class="scenario-label">Try a sample:</span>
+              <button class="scenario-btn" id="gov-sample-high">⚑ Sensitive (royal + ministry)</button>
+              <button class="scenario-btn" id="gov-sample-low">Everyday (event)</button>
+            </div>
             <textarea id="gov-input" rows="14" placeholder="Paste draft text or a headline…"></textarea>
             <button id="gov-submit" class="btn-primary" style="margin-top:14px">Classify</button>
           </div>

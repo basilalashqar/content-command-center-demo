@@ -71,56 +71,128 @@ window.addEventListener("DOMContentLoaded", async () => {
   wireParaphraseForm();
   wireRadar();
   loadSampleImages();
-  wireTour();
+  renderSectionStories();   // audience-facing "today → problem → what it does → benefit" strips
+  wireInlineSamples();      // one-click examples on Checker + Governance (press & run live)
   await loadOverview();   // first paint
   // Lazy-load others on first nav click; but pre-warm freshness data
   loadFreshness();
 });
 
-/* ───────── Presenter walkthrough ─────────
-   IMPORTANT: the speaker notes live ENTIRELY in a SEPARATE window (present.html)
-   so they are never shown — or even loaded — on the screen-shared demo. This
-   page only opens that window and, when driven by it, navigates to a section and
-   draws a subtle highlight ring (audience-safe). The notes window sends the
-   target section + selector; this page carries no script text at all. */
-let PRESENTER_WIN = null;
+/* ───────── Audience-facing story strips ─────────
+   Shown ON the demo (safe for the screen-share): for each section, four plain-
+   language points the room can read while you talk — what the team does today,
+   the snag, what this does, and the benefit. No coaching, no script. */
+const SECTION_STORY = {
+  overview: {
+    today: "Your team writes, formats, tags and cleans every piece by hand — across the site and social.",
+    problem: "Most of that time goes to repetitive work, not the reporting only a person can do.",
+    does: "Gets the routine work ready — drafts, formats, checks — and hands it to the team to approve.",
+    benefit: "The same editors get more done, in your voice, with the final call always theirs." },
+  radar: {
+    today: "Someone keeps an eye on QNA, The Peninsula and Gulf Times all day to catch what's worth covering.",
+    problem: "Stories slip by, and there's no quick read on what's sensitive.",
+    does: "Watches those sources for you around the clock and flags anything sensitive.",
+    benefit: "Nothing gets missed — the desk starts the day ahead instead of catching up." },
+  generate: {
+    today: "An editor writes the article, then re-does it for Instagram, a push and a story — one at a time.",
+    problem: "Preparing every format by hand eats hours, and the voice drifts between them.",
+    does: "Turns one brief into every format at once, in your style — and flags anything not in the source.",
+    benefit: "Hours back per story, a steady voice, and you can see where every fact came from." },
+  paraphrase: {
+    today: "Editors read a wire story and re-write it by hand — often ending up too close to the original.",
+    problem: "It's slow, and near-copying hurts originality and search ranking.",
+    does: "Re-tells the story in your own words, keeps the facts and quotes, and checks it isn't a copy.",
+    benefit: "A clean, original first draft in seconds — ready for an editor to polish." },
+  compare: {
+    today: "How good a piece is depends on who's on shift, with no easy check against your house style.",
+    problem: "It's hard to say, objectively, whether something really sounds like Qatar Living.",
+    does: "Takes the same facts and writes a version in your style, right next to your real article.",
+    benefit: "You judge it with your own eyes — no claims, just the two side by side." },
+  checker: {
+    today: "Staying on house style relies on each writer remembering the rules; a senior re-checks by hand.",
+    problem: "Honorifics and tone drift, and the senior editor becomes the bottleneck.",
+    does: "Scores any piece against your own style rules in seconds and points to what to fix.",
+    benefit: "Consistent style without waiting on one person to read everything." },
+  governance: {
+    today: "Editors judge by feel what's sensitive — royals, ministries, security — and pass it up informally.",
+    problem: "It's inconsistent, and a sensitive piece can slip through to publish.",
+    does: "Checks every piece, flags what's sensitive, and routes it to the right reviewer — nothing auto-publishes.",
+    benefit: "Peace of mind: the risky items always reach a person before they go live." },
+  freshness: {
+    today: "Keeping events current means someone checking dozens of dates by hand — so it rarely happens.",
+    problem: "More than half your listed events have already ended, which readers notice.",
+    does: "Spots the expired events on its own and suggests a fix for approval.",
+    benefit: "Your events page stays trustworthy, with almost no effort." },
+  cleanup: {
+    today: "Before publishing, editors clean up pasted text and stamp the same sign-off on every article.",
+    problem: "It's tedious, and the identical paragraph ends up on hundreds of pages.",
+    does: "Clears the repeated boilerplate and pasted clutter in one click.",
+    benefit: "Cleaner pages, and a few minutes saved on every single article." },
+  copilot: {
+    today: "Edits and approvals happen in people's heads and email — nothing is recorded or learned from.",
+    problem: "The system never gets smarter, and there's no trail of who decided what.",
+    does: "Gives editors a simple approve / edit / send-back, and learns from every change they make.",
+    benefit: "It gets better at your style over time, with a clear record behind every call." },
+  cms: {
+    today: "Moving content between the writing tool and the website means copy-pasting back and forth.",
+    problem: "That friction is slow, and a place for mistakes to creep in.",
+    does: "Pulls in what needs writing and sends back a draft — a person always presses publish.",
+    benefit: "Less manual shuffling, with publishing firmly in your team's hands." },
+  roi: {
+    today: "All the manual steps above add up — across the whole desk, every single day.",
+    problem: "That's a lot of skilled time spent on routine work instead of journalism.",
+    does: "Hands a few hours back to each editor every week by taking on the routine parts.",
+    benefit: "The same team produces more, across more channels, without burning out." },
+  operating: {
+    today: "There's no single view of who owns what, or proof of how a decision was made.",
+    problem: "That makes the whole process hard to manage and to stand behind.",
+    does: "Gives every step an owner, a measure, and a full record of what happened.",
+    benefit: "A process you can run, measure and improve — and explain to anyone who asks." },
+};
 
-function wireTour() {
-  $("#tour-start")?.addEventListener("click", openPresenter);
-  // The notes window tells us which section/element to highlight; no notes here.
-  window.addEventListener("message", (e) => {
-    if (e.origin !== window.location.origin) return;
-    const d = e.data || {};
-    if (d.type === "ql-goto") applyStepNavigation(d.section, d.sel);
-    else if (d.type === "ql-clear") clearSpotlight();
+const STORY_CELLS = [
+  ["today",   "Today, by hand",  "st-today"],
+  ["problem", "The problem",     "st-problem"],
+  ["does",    "What this does",  "st-does"],
+  ["benefit", "The benefit",     "st-benefit"],
+];
+
+/* One-click examples so you can press and run live in front of the room. */
+const SAMPLE_CHECKER =
+`Qatar and France Sign Cultural Cooperation Agreement in Doha
+
+Qatar and France signed a cultural cooperation agreement in Doha on Sunday, the Ministry of Culture announced. The agreement was signed by HE the Minister of Culture and his French counterpart during an official visit.
+
+It covers joint exhibitions, heritage preservation and academic exchange between the two countries. Officials said the agreement reflects the strong ties between Qatar and France and supports the country's cultural development goals.`;
+
+const SAMPLE_GOV_HIGH =
+`HH the Amir Receives Pakistani Prime Minister at the Amiri Diwan
+
+HH Sheikh Tamim bin Hamad Al Thani received HE the Prime Minister of Pakistan at the Amiri Diwan on Monday. The two sides discussed bilateral relations and a number of regional security developments. The Ministry of Foreign Affairs said the talks also covered defence cooperation between the two countries.`;
+
+const SAMPLE_GOV_LOW =
+`Handmade Party Experience Returns to Mall of Qatar This Weekend
+
+A handmade party experience returns to Mall of Qatar this weekend, with fresh products, live demonstrations and activities for families and shoppers throughout the day.`;
+
+function wireInlineSamples() {
+  $("#c-sample")?.addEventListener("click", () => { $("#c-input").value = SAMPLE_CHECKER; });
+  $("#gov-sample-high")?.addEventListener("click", () => { $("#gov-input").value = SAMPLE_GOV_HIGH; });
+  $("#gov-sample-low")?.addEventListener("click", () => { $("#gov-input").value = SAMPLE_GOV_LOW; });
+}
+
+function renderSectionStories() {
+  Object.keys(SECTION_STORY).forEach((id) => {
+    const sec = document.querySelector(`#section-${id}`);
+    if (!sec) return;
+    const head = sec.querySelector(".section-head");
+    if (!head || sec.querySelector(".story-strip")) return;
+    const s = SECTION_STORY[id];
+    const cells = STORY_CELLS.filter(([k]) => s[k]).map(([k, label, cls]) =>
+      `<div class="story-cell ${cls}"><div class="story-label">${label}</div><div class="story-text">${s[k]}</div></div>`
+    ).join("");
+    head.insertAdjacentHTML("afterend", `<div class="story-strip">${cells}</div>`);
   });
-}
-
-function openPresenter() {
-  // Open the private teleprompter in its own window. Keep it OFF the shared
-  // screen (put it on a second monitor / phone; share only the demo tab).
-  PRESENTER_WIN = window.open("present.html", "qlpresenter",
-    "width=600,height=860,menubar=no,toolbar=no,location=no");
-  if (!PRESENTER_WIN) {
-    alert("Please allow pop-ups so the Presenter Notes window can open — then keep it on your own screen and share only the demo tab.");
-  } else {
-    PRESENTER_WIN.focus();
-  }
-}
-
-function clearSpotlight() {
-  document.querySelectorAll(".tour-spot").forEach(e => e.classList.remove("tour-spot"));
-}
-
-function applyStepNavigation(section, sel) {
-  if (!section) return;
-  const navBtn = document.querySelector(`.nav-item[data-section="${section}"]`);
-  if (navBtn) navBtn.click();
-  setTimeout(() => {
-    clearSpotlight();
-    const el = sel && document.querySelector(sel);
-    if (el) { el.classList.add("tour-spot"); el.scrollIntoView({ behavior: "smooth", block: "center" }); }
-  }, 360);
 }
 
 /* Real Qatar Living hero images (from the scraped corpus) */

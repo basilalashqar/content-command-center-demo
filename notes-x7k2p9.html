@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Presenter Notes</title>
+<style>
+  :root{ --navy:#00426d; --orange:#ff7f38; --rule:#e4e7ec; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:-apple-system,"Public Sans",Segoe UI,Roboto,Arial,sans-serif;
+        color:#101828; background:#f8f9fb; display:flex; flex-direction:column; min-height:100vh; }
+  .warn-bar{ background:#7a271a; color:#fff; font-size:12px; font-weight:700; text-align:center;
+             padding:7px 12px; line-height:1.35; }
+  .warn-bar b{ color:#fed7aa; }
+  header{ background:var(--navy); color:#fff; padding:12px 18px; display:flex; align-items:center;
+          justify-content:space-between; gap:12px; }
+  header .h-title{ font-weight:800; font-size:15px; }
+  header .h-prog{ font-size:13px; font-weight:800; color:var(--orange); white-space:nowrap; }
+  main{ flex:1; overflow-y:auto; padding:18px 20px 16px; }
+  .title{ font-weight:800; font-size:22px; color:var(--navy); line-height:1.2; margin:0 0 14px; }
+  .block{ margin:0 0 11px; }
+  .label{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
+  .block p{ margin:3px 0 0; font-size:15.5px; line-height:1.5; color:#344054; }
+  .arc{ display:flex; flex-direction:column; gap:7px; margin:0 0 12px; }
+  .arc-step{ padding:9px 13px; border-radius:9px; border-left:4px solid; }
+  .arc-step .l{ font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
+  .arc-step p{ margin:3px 0 0; font-size:14.5px; line-height:1.45; color:#344054; }
+  .am{ background:#f2f4f7; border-left-color:#98a2b3; } .am .l{ color:#475467; }
+  .ap{ background:#fffaeb; border-left-color:#f79009; } .ap .l{ color:#b54708; }
+  .ag{ background:#ecfdf3; border-left-color:#12b76a; } .ag .l{ color:#027a48; }
+  .say{ background:#fff7f0; border-left:4px solid var(--orange); border-radius:0 10px 10px 0; padding:12px 15px; }
+  .say .label{ color:var(--orange); }
+  .say p{ font-size:19px; font-weight:600; color:var(--navy); line-height:1.5; }
+  .do .label{ color:#0b7a4b; }
+  .watch{ background:#fffaeb; border-left:4px solid #f79009; border-radius:0 10px 10px 0; padding:9px 14px; }
+  .watch .label{ color:#b54708; } .watch p{ color:#93370d; font-size:14px; }
+  footer{ border-top:1px solid var(--rule); background:#fff; padding:12px 18px; display:flex; align-items:center; gap:10px; }
+  .spacer{ flex:1; }
+  button{ font-family:inherit; font-weight:700; font-size:15px; border-radius:9px; cursor:pointer;
+          padding:11px 20px; border:1px solid var(--rule); background:#fff; color:#344054; }
+  button.primary{ background:var(--navy); color:#fff; border-color:var(--navy); }
+  button.primary:hover{ filter:brightness(1.08); }
+  button:disabled{ opacity:.4; cursor:default; }
+  .hint{ text-align:center; font-size:11px; color:#98a2b3; padding:6px 0 0; }
+</style>
+</head>
+<body>
+  <div class="warn-bar">🔒 PRIVATE — your notes only. Open this on your phone or a second screen. NEVER share or screen-share this page.</div>
+  <header>
+    <span class="h-title">🎤 Qatar Living — Presenter Notes</span>
+    <span class="h-prog" id="prog"></span>
+  </header>
+  <main id="body"><p style="color:#98a2b3">Loading…</p></main>
+  <footer>
+    <span class="spacer"></span>
+    <button id="back">← Back</button>
+    <button id="next" class="primary">Next →</button>
+  </footer>
+  <div class="hint">← → arrow keys to move between steps</div>
+
+  <script>
+  var PRESENT_STEPS = [
+    { title: "Open — frame it before you click anything",
+      what: "The whole pitch in one sentence. Say this FIRST, with the room's editors in mind.",
+      say: "Before I show anything: this makes your editors faster and keeps them in control — it does not replace them. A lot of their day is manual, repetitive work. For each part I'll show what it costs you by hand, then what the system does instead. Nothing publishes without an editor.",
+      click: "Don't click yet. Say the line, pause, then begin.",
+      watch: "The most important sentence of the meeting. Say it slowly, looking at the writers, not just the bosses." },
+    { title: "1 · We studied YOUR real content (Overview)",
+      what: "Live stats from Qatar Living's own corpus — your credibility foundation.",
+      say: "We studied 1,999 of your own articles and 118 events. These numbers come from your pages — not generic AI claims.",
+      click: "Point across the stat cards — quotes per article, stale events, headline sameness.",
+      watch: "Lead with their content, not AI features. This earns the right to show AI to skeptics." },
+    { title: "2 · The diagnosis (Overview / Corpus Evidence)",
+      manual: "Today the team hand-writes every story, hand-crafts every headline, tags by hand, and tidies copy before publishing.",
+      problem: "It shows: 0.79 quotes per article (65% have none) — mostly repackaged wire copy; 97.3% of headlines the same shape; everything tagged just 'News'; 57.6% of events already ended.",
+      ai: "Every one of those is work the system can take off their plate — the next screens show each.",
+      say: "Here's the pattern in your own content: a lot of skilled-editor time goes into mechanical work, leaving too little for real reporting.",
+      click: "Walk the four story cards: Today → The problem → What this does → The benefit.",
+      watch: "Frame it as 'your team is mis-deployed' — NEVER 'too many people'." },
+    { title: "3 · Live News Radar",
+      say: "Today someone keeps tabs on QNA, The Peninsula and Gulf Times by hand. This watches them for you — live, around the clock — and flags anything sensitive.",
+      click: "Show the live items and the 'last updated' time. Say the word 'live'.",
+      watch: "Make sure they register it's real and live, not a slideshow." },
+    { title: "4 · Auto-prepare → the queue",
+      say: "Instead of retyping every story by hand, the desk wakes up to drafts already prepared — prepared, not published. An editor still approves each one.",
+      click: "Press 'Auto-prepare top 3' (or 'Prepare in QL style' on one item).",
+      watch: "Every time you say 'prepared', say 'an editor approves'." },
+    { title: "5 · Compare to Real ★ (the honesty screen)",
+      say: "Left is your actual published article. Right is ours from the same facts. The score is adherence to your style rules — not 'better than Qatar Living'. You decide.",
+      click: "Open the aviation sample; let them read both columns.",
+      watch: "Do NOT claim it beats them. Being honest here wins the room." },
+    { title: "6 · Paraphrase any source",
+      say: "Paste any outlet's story. Instead of retyping it, you get an original re-report in your tone, with the facts and quotes intact.",
+      click: "Press the sample, run it, show the copy buttons.",
+      watch: "Say 'reworded, not copied' — it checks the overlap." },
+    { title: "7 · Generate all formats + catch it failing",
+      say: "From one brief: article, Instagram, push and story. And watch — I'll feed it a 'fact' that isn't in the brief… see, it flags it in red. It tells you when it's unsure. It doesn't pretend.",
+      click: "Run a sample first. Then add an unsupported 'fact' and show the grounding flag.",
+      watch: "This live catch converts skeptics more than any feature." },
+    { title: "8 · Style Checker (honestly named)",
+      say: "This measures adherence to your rules — we renamed it from 'quality' on purpose, because you were right that 'quality' overclaimed.",
+      click: "Press the sample, show the breakdown.",
+      watch: "Honest naming answers Anis's number-one past objection — call it out." },
+    { title: "9 · Governance gate (control = trust)",
+      say: "Anything touching royals, ministries, diplomacy or security is routed to senior plus legal review automatically — and nothing auto-publishes.",
+      click: "Press the Sensitive-News example; show the high-risk routing.",
+      watch: "Lead with control for skeptics — this screen says 'you're safe'." },
+    { title: "10 · Event freshness (an easy yes)",
+      say: "Nobody checks these by hand today, so more than half your live events already ended. This flags each one with a fix.",
+      click: "Show the stale list and a suggested action.",
+      watch: "Low-trust, high-drudgery win — the easy 'yes' to start a pilot on." },
+    { title: "11 · CMS Cleanup (the foot in the door)",
+      say: "The boring pre-publish tidy-up — the repeated boilerplate, the pasted clutter — done in a click. No creativity, no trust required.",
+      click: "Press the sample, run cleanup, show the before/after.",
+      watch: "Lead with the repeated BOILERPLATE (visible on the page). Do NOT headline 'nbsp' — it renders fine for readers; it's a markup/SEO point, not a visible bug." },
+    { title: "12 · Editorial Copilot (your editors train it)",
+      say: "Every edit your editors make trains it. They become the editors-in-chief of an assistant that learns your house style. Acceptance rate is the KPI.",
+      click: "Approve one, edit one, send one back with a reason; show the learning panel.",
+      watch: "Answers both 'how does it improve?' and the job-fear. Linger here." },
+    { title: "13 · CMS Integration (an honest mock)",
+      say: "This is labelled a mock — we're not faking a live integration. It shows the contract: pull read-only, push drafts only. A person always publishes.",
+      click: "Show pull opportunities and push-draft.",
+      watch: "Honesty about 'mock' builds more trust than a faked live demo." },
+    { title: "14 · ROI — say HOURS BACK, never FTE",
+      say: "Three to four hours back per editor every week — for reporting and judgment instead of cleanup. Same team, more output, more formats.",
+      click: "Show the default scenario. Read the per-editor hours, not the aggregate.",
+      watch: "NEVER say 'FTE freed' or 'headcount' — to 18 editors that reads as layoffs. Hours-back, always." },
+    { title: "15 · Operating model + audit",
+      say: "Every stage has an owner, a measure and a control, with a full audit trail. This is an operating layer, not a toy.",
+      click: "Show the table and the audit log.",
+      watch: "Signals you've thought about governance, not just generation." },
+    { title: "Close — land on the ask",
+      say: "You've seen the manual work, the problem with each, and what the system does instead. The ask: a two-to-four-week paid pilot with two or three of your editors and read-only CMS access — measured on acceptance rate and hours saved.",
+      click: "Stop here. Hand it to the room.",
+      watch: "End on the ask and Phase 2 — not 'what do you think?'." },
+  ];
+
+  (function(){
+    var i = 0, $ = function(s){ return document.querySelector(s); };
+    function esc(t){ return (t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+    function render(){
+      if (i < 0) i = 0; if (i > PRESENT_STEPS.length-1) i = PRESENT_STEPS.length-1;
+      var s = PRESENT_STEPS[i];
+      $("#prog").textContent = "Step " + (i+1) + " / " + PRESENT_STEPS.length;
+      var arc = (s.manual || s.problem || s.ai) ? '<div class="arc">'
+        + (s.manual ? '<div class="arc-step am"><span class="l">🖐 Today, by hand</span><p>'+esc(s.manual)+'</p></div>' : '')
+        + (s.problem ? '<div class="arc-step ap"><span class="l">⚠ The problem</span><p>'+esc(s.problem)+'</p></div>' : '')
+        + (s.ai ? '<div class="arc-step ag"><span class="l">🤖 What the system does</span><p>'+esc(s.ai)+'</p></div>' : '')
+        + '</div>' : '';
+      $("#body").innerHTML = '<div class="title">' + esc(s.title) + '</div>'
+        + (s.what ? '<div class="block"><span class="label" style="color:#667085">What it is</span><p>'+esc(s.what)+'</p></div>' : '')
+        + arc
+        + (s.say ? '<div class="block say"><span class="label">🎙 Say this</span><p>“'+esc(s.say)+'”</p></div>' : '')
+        + (s.click ? '<div class="block do"><span class="label">Do</span><p>'+esc(s.click)+'</p></div>' : '')
+        + (s.watch ? '<div class="block watch"><span class="label">⚠ Watch</span><p>'+esc(s.watch)+'</p></div>' : '');
+      $("#body").scrollTop = 0;
+      $("#back").disabled = (i === 0);
+      $("#next").textContent = (i === PRESENT_STEPS.length-1) ? "Finish ✓" : "Next →";
+    }
+    function next(){ if (i < PRESENT_STEPS.length-1){ i++; render(); } }
+    function back(){ if (i > 0){ i--; render(); } }
+    $("#next").addEventListener("click", next);
+    $("#back").addEventListener("click", back);
+    document.addEventListener("keydown", function(e){
+      if (e.key === "ArrowRight") next(); else if (e.key === "ArrowLeft") back();
+    });
+    render();
+  })();
+  </script>
+</body>
+</html>
