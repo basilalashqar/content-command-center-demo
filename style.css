@@ -1221,28 +1221,29 @@ tbody tr:hover td { background: #f7fafc; }
 .arc-ai      { background: #ecfdf3; border-left-color: #12b76a; }
 .arc-ai span      { color: #027a48; }
 
-/* ── Audience-facing story strip (shown on the demo: today → problem → does → benefit) ── */
-.story-strip {
+/* ── Audience-facing story strip (today → problem → does → benefit).
+   Uses a unique .v* prefix to avoid colliding with the hero .story-text overlay. ── */
+.vstrip {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 0 20px;
 }
-.story-cell {
+.vcell {
   background: #fff; border: 1px solid var(--rule); border-top: 3px solid #98a2b3;
   border-radius: 10px; padding: 12px 14px;
 }
-.story-cell.st-today   { border-top-color: #98a2b3; }
-.story-cell.st-problem { border-top-color: #f79009; }
-.story-cell.st-does    { border-top-color: #2e90fa; }
-.story-cell.st-benefit { border-top-color: #12b76a; }
-.story-label {
+.vcell.st-today   { border-top-color: #98a2b3; }
+.vcell.st-problem { border-top-color: #f79009; }
+.vcell.st-does    { border-top-color: #2e90fa; }
+.vcell.st-benefit { border-top-color: #12b76a; }
+.vlabel {
   font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em;
   color: #475467; margin-bottom: 5px;
 }
-.story-cell.st-problem .story-label { color: #b54708; }
-.story-cell.st-does    .story-label { color: #1849a9; }
-.story-cell.st-benefit .story-label { color: #027a48; }
-.story-text { font-size: 13px; line-height: 1.5; color: #344054; }
-@media (max-width: 1100px) { .story-strip { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 620px)  { .story-strip { grid-template-columns: 1fr; } }
+.vcell.st-problem .vlabel { color: #b54708; }
+.vcell.st-does    .vlabel { color: #1849a9; }
+.vcell.st-benefit .vlabel { color: #027a48; }
+.vtext { position: static; font-size: 13px; line-height: 1.5; color: #344054; }
+@media (max-width: 1100px) { .vstrip { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px)  { .vstrip { grid-template-columns: 1fr; } }
 
 /* ── Guided walkthrough panel (audience-safe) ── */
 #walk.walk-hidden { display: none; }
@@ -1262,9 +1263,17 @@ tbody tr:hover td { background: #f7fafc; }
 .walk-min:hover { background: #f2f4f7; color: #344054; }
 .walk-body { margin-top: 12px; overflow-y: auto; }
 .walk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.walk-grid .story-text { font-size: 13.5px; }
+.walk-grid .vtext { font-size: 13.5px; }
 .walk-points { margin: 2px 0 0; padding-left: 22px; }
 .walk-points li { font-size: 15.5px; line-height: 1.55; color: #344054; margin-bottom: 8px; }
+/* workflow pipeline: Radar › Brief › Draft › … */
+.walk-flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; margin: 0 0 16px; }
+.flow-stage {
+  background: var(--navy); color: #fff; font-weight: 800; font-size: 13px;
+  padding: 7px 14px; border-radius: 8px; white-space: nowrap;
+}
+.flow-stage:first-child { background: var(--orange); }
+.flow-arrow { color: var(--orange); font-weight: 900; font-size: 18px; line-height: 1; }
 .walk-actions { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
 .walk-spacer { flex: 1; }
 .walk-mini {
@@ -1278,7 +1287,7 @@ tbody tr:hover td { background: #f7fafc; }
 #walk-mini-step { color: var(--orange); }
 #walk.walk-min .walk-card { display: none; }
 #walk.walk-min .walk-mini { display: inline-flex; }
-body.walk-active .story-strip { display: none; }  /* avoid duplicating the cards while the panel shows them */
+body.walk-active .vstrip { display: none; }  /* avoid duplicating the cards while the panel shows them */
 @media (max-width: 980px) {
   .walk-card { left: 8px; right: 8px; bottom: 8px; transform: none; width: auto; max-width: none; max-height: 66vh; }
   .walk-grid { grid-template-columns: 1fr; }

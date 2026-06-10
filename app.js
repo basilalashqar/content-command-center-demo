@@ -187,11 +187,12 @@ function wireInlineSamples() {
    on each screen — Today / Problem / What this does / Benefit. No private coaching
    here; that lives only at the unlisted notes URL, for the presenter's own screen. */
 const WALK_ORDER = [
-  { section: "overview", sel: ".run-demo-bar", title: "The big picture",
+  { section: "overview", sel: ".run-demo-bar", title: "The big picture — the workflow",
+    flow: ["Radar", "Brief", "Draft", "Checks", "Approval", "Publish", "Learn"],
     intro: [
-      "Your team does a lot of repetitive work by hand — writing, formatting, tagging and cleaning, across the site and social.",
-      "This gets that routine work ready in your voice, then hands it to your editors to approve.",
-      "Nothing publishes on its own — the final call is always theirs.",
+      "This is the whole workflow, end to end. The system handles the repetitive parts; your editors stay in charge of every decision.",
+      "It spots the news, prepares a brief, writes the draft in your voice, runs the checks — then your team approves and publishes.",
+      "Nothing publishes on its own, and it learns from every edit your editors make.",
       "Let's walk through it, one piece at a time." ] },
   { section: "radar",      sel: ".radar-bar",                       title: "Live News Radar" },
   { section: "generate",   sel: "#section-generate .section-head",  title: "One brief → every format" },
@@ -262,11 +263,13 @@ function renderWalkStep() {
     $("#walk-title").textContent = s.title;
     let body;
     if (s.intro) {
-      body = `<ul class="walk-points">${s.intro.map(p => `<li>${p}</li>`).join("")}</ul>`;
+      const flow = s.flow ? `<div class="walk-flow">${s.flow.map((st, idx) =>
+        `<span class="flow-stage">${st}</span>${idx < s.flow.length - 1 ? '<span class="flow-arrow">›</span>' : ''}`).join("")}</div>` : "";
+      body = flow + `<ul class="walk-points">${s.intro.map(p => `<li>${p}</li>`).join("")}</ul>`;
     } else {
       const st = SECTION_STORY[s.section] || {};
       body = `<div class="walk-grid">${STORY_CELLS.filter(([k]) => st[k]).map(([k, label, cls]) =>
-        `<div class="story-cell ${cls}"><div class="story-label">${label}</div><div class="story-text">${st[k]}</div></div>`).join("")}</div>`;
+        `<div class="vcell ${cls}"><div class="vlabel">${label}</div><div class="vtext">${st[k]}</div></div>`).join("")}</div>`;
     }
     $("#walk-body").innerHTML = body;
     $("#walk-back").style.visibility = (WALK_I === 0) ? "hidden" : "visible";
@@ -282,9 +285,9 @@ function renderSectionStories() {
     if (!head || sec.querySelector(".story-strip")) return;
     const s = SECTION_STORY[id];
     const cells = STORY_CELLS.filter(([k]) => s[k]).map(([k, label, cls]) =>
-      `<div class="story-cell ${cls}"><div class="story-label">${label}</div><div class="story-text">${s[k]}</div></div>`
+      `<div class="vcell ${cls}"><div class="vlabel">${label}</div><div class="vtext">${s[k]}</div></div>`
     ).join("");
-    head.insertAdjacentHTML("afterend", `<div class="story-strip">${cells}</div>`);
+    head.insertAdjacentHTML("afterend", `<div class="vstrip">${cells}</div>`);
   });
 }
 
